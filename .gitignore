@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────
+# JAVA / MAVEN
+# ─────────────────────────────────────────────────────
+# target/ → Maven compila tu código y guarda el resultado aquí
+# No tiene sentido subirlo — se regenera solo con: mvn clean install
+target/
+
+# Archivos compilados de Java — se generan solos
+*.class
+
+# Empaquetados — se generan al hacer mvn package
+*.jar
+*.war
+*.ear
+
+# ─────────────────────────────────────────────────────
+# INTELLIJ IDEA
+# ─────────────────────────────────────────────────────
+# Configuración local del IDE — solo sirve en TU máquina
+# Un colaborador tiene su propia configuración
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ─────────────────────────────────────────────────────
+# SECRETOS — NUNCA A GITHUB
+# ─────────────────────────────────────────────────────
+# .env tiene tus contraseñas reales
+# .gitignore lo bloquea para siempre
+.env
+*.env.local
+*.env.production
+
+# ─────────────────────────────────────────────────────
+# LOGS
+# ─────────────────────────────────────────────────────
+# Los logs se generan cuando corres la app
+# No aportan nada al repositorio
+*.log
+logs/
+
+# ─────────────────────────────────────────────────────
+# SISTEMA OPERATIVO
+# ─────────────────────────────────────────────────────
+# Windows genera estos automáticamente
+Thumbs.db
+Desktop.ini
+
+# Mac genera este (por si un colaborador usa Mac)
+.DS_Store
+
+# ─────────────────────────────────────────────────────
+# DOCKER
+# ─────────────────────────────────────────────────────
+# Override local de docker-compose
+# Cada dev puede tener su configuración personal
+docker-compose.override.yml
+
+# ─────────────────────────────────────────────────────
+# SPRING BOOT
+# ─────────────────────────────────────────────────────
+# Configuración local que sobreescribe application.yml
+# Puede tener valores personales — no va al repo
+application-local.yml
+application-local.properties

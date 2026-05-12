@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+
+  # ─── POSTGRESQL 16 ────────────────────────────────────────
+  # Base de datos principal — ventas, stock, finanzas
+  postgres:
+    image: postgres:16
+    container_name: miroapp-postgres
+    environment:
+      POSTGRES_DB: miroapp
+      POSTGRES_USER: miroapp_user
+      POSTGRES_PASSWORD: miroapp_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - miroapp-network
+    restart: unless-stopped
+
+  # ─── MONGODB 7 ────────────────────────────────────────────
+  # Logs de actividad y configuraciones flexibles
+  mongodb:
+    image: mongo:7
+    container_name: miroapp-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - miroapp-network
+    restart: unless-stopped
+
+  # ─── REDIS 7 ──────────────────────────────────────────────
+  # Cache de sesiones y datos de alta frecuencia
+  redis:
+    image: redis:7-alpine
+    container_name: miroapp-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - miroapp-network
+    restart: unless-stopped
+
+# ─── VOLUMENES ────────────────────────────────────────────────
+# Guardan los datos aunque el contenedor se detenga
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+
+# ─── RED ──────────────────────────────────────────────────────
+# Red interna para que los contenedores se comuniquen
+networks:
+  miroapp-network:
+    driver: bridge
