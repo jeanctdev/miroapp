@@ -198,8 +198,8 @@ CREATE TABLE public.tenants (
     admin_name    VARCHAR(200) NOT NULL,
     admin_phone   VARCHAR(20),
     tax_info      JSONB        NOT NULL DEFAULT '{}',
-    status        VARCHAR(20)  NOT NULL DEFAULT 'trial'
-                  CHECK (status IN ('trial','active','suspended','cancelled')),
+    status        VARCHAR(20)  NOT NULL DEFAULT 'TRIAL'
+                  CHECK (status IN ('TRIAL','ACTIVE','SUSPENDED','CANCELLED')),
     trial_ends_at TIMESTAMP WITH TIME ZONE,
     settings      JSONB        NOT NULL DEFAULT '{}',
     created_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -220,16 +220,16 @@ CREATE INDEX idx_tenants_deleted_at  ON public.tenants(deleted_at);
 -- =====================================================================
 CREATE TABLE public.tenant_subscriptions (
     id             UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    tenant_id      UUID         NOT NULL REFERENCES public.tenants(id),
-    plan_id        UUID         NOT NULL REFERENCES public.plans(id),
-    billing_cycle  VARCHAR(10)  NOT NULL
-                   CHECK (billing_cycle IN ('monthly','annual')),
+    tenant_id      UUID          NOT NULL REFERENCES public.tenants(id),
+    plan_id        UUID          NOT NULL REFERENCES public.plans(id),
+    billing_cycle  VARCHAR(10)   NOT NULL
+                   CHECK (billing_cycle IN ('MONTHLY','ANNUAL')),
     amount_paid    DECIMAL(10,2) NOT NULL,
-    currency_code  VARCHAR(3)   NOT NULL REFERENCES public.currencies(code),
+    currency_code  VARCHAR(3)    NOT NULL REFERENCES public.currencies(code),
     starts_at      TIMESTAMP WITH TIME ZONE NOT NULL,
     ends_at        TIMESTAMP WITH TIME ZONE NOT NULL,
-    payment_status VARCHAR(20)  NOT NULL DEFAULT 'pending'
-                   CHECK (payment_status IN ('pending','paid','failed','refunded')),
+    payment_status VARCHAR(20)   NOT NULL DEFAULT 'PENDING'
+                   CHECK (payment_status IN ('PENDING','PAID','FAILED','REFUNDED')),
     payment_ref    VARCHAR(255),
     created_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
 );

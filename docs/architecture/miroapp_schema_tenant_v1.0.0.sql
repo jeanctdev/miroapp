@@ -266,8 +266,8 @@ CREATE TABLE tenant_template.products (
     -- physical → stock, puede tener variantes
     -- service  → sin stock, sin variantes
     -- digital  → sin stock físico, puede tener variantes
-    type        VARCHAR(20) NOT NULL DEFAULT 'physical'
-                CHECK (type IN ('physical','service','digital')),
+    type         VARCHAR(20)  NOT NULL DEFAULT 'PHYSICAL'
+                 CHECK (type IN ('PHYSICAL','SERVICE','DIGITAL')),
 
     -- SKU — código interno del negocio
     -- NULL permitido — no todos los negocios usan SKU
@@ -509,12 +509,12 @@ CREATE TABLE tenant_template.stock_movements (
     type         VARCHAR(3) NOT NULL CHECK (type IN ('IN','OUT')),
 
     -- Razón específica del movimiento
-    reason       VARCHAR(20) NOT NULL
+    reason       VARCHAR(20)  NOT NULL
                  CHECK (reason IN (
-                     'purchase','sale',
-                     'transfer_in','transfer_out',
-                     'adjustment_in','adjustment_out',
-                     'return_customer','return_supplier'
+                     'PURCHASE','SALE',
+                     'TRANSFER_IN','TRANSFER_OUT',
+                     'ADJUSTMENT_IN','ADJUSTMENT_OUT',
+                     'RETURN_CUSTOMER','RETURN_SUPPLIER'
                  )),
 
     -- Cantidad — siempre positivo
@@ -599,12 +599,12 @@ CREATE TABLE tenant_template.sales (
     customer_tax_info JSONB,
 
     -- ¿Cómo nació esta venta?
-    origin            VARCHAR(20) NOT NULL DEFAULT 'direct'
-                      CHECK (origin IN ('direct','order','quotation')),
+    origin           VARCHAR(20)  NOT NULL DEFAULT 'DIRECT'
+                      CHECK (origin IN ('DIRECT','ORDER','QUOTATION')),
 
     -- Estado actual
-    status            VARCHAR(20) NOT NULL DEFAULT 'pending'
-                      CHECK (status IN ('pending','completed','cancelled','refunded')),
+    status           VARCHAR(20)  NOT NULL DEFAULT 'PENDING'
+                      CHECK (status IN ('PENDING','COMPLETED','CANCELLED','REFUNDED')),
 
     -- Montos calculados automáticamente al agregar productos
     subtotal          DECIMAL(19,4) NOT NULL DEFAULT 0,
@@ -696,8 +696,8 @@ CREATE TABLE tenant_template.sale_items (
     -- Tipo guardado en el momento — no depende del producto original
     -- physical → descuenta stock al confirmar
     -- service/digital → no descuenta stock
-    item_type       VARCHAR(20) NOT NULL DEFAULT 'physical'
-                    CHECK (item_type IN ('physical','service','digital')),
+     item_type       VARCHAR(20)   NOT NULL DEFAULT 'PHYSICAL'
+                    CHECK (item_type IN ('PHYSICAL','SERVICE','DIGITAL')),
 
     created_at      TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     -- SIN updated_at NI deleted_at — INMUTABLE
@@ -739,8 +739,8 @@ CREATE TABLE tenant_template.sale_payments (
 
     -- Método de pago utilizado
     method        VARCHAR(20) NOT NULL
-                  CHECK (method IN ('cash','yape','plin','transfer','card','credit','other')),
-
+                  CHECK (method IN ('CASH','YAPE','PLIN','TRANSFER','CARD','CREDIT','OTHER')),
+ 
     -- Monto pagado con este método — siempre positivo
     amount        DECIMAL(19,4) NOT NULL CHECK (amount > 0),
 
@@ -818,14 +818,14 @@ CREATE TABLE tenant_template.transactions (
     type             VARCHAR(3) NOT NULL CHECK (type IN ('IN','OUT')),
 
     -- Categoría del movimiento
-    category         VARCHAR(30) NOT NULL
+    category         VARCHAR(30)  NOT NULL
                      CHECK (category IN (
-                         'sale','loan_received','owner_deposit',
-                         'supplier_return','other_income',
-                         'supplier_payment','rent','utilities',
-                         'salary','tax_payment','maintenance',
-                         'marketing','loan_payment',
-                         'owner_withdrawal','other_expense'
+                         'SALE','LOAN_RECEIVED','OWNER_DEPOSIT',
+                         'SUPPLIER_RETURN','OTHER_INCOME',
+                         'SUPPLIER_PAYMENT','RENT','UTILITIES',
+                         'SALARY','TAX_PAYMENT','MAINTENANCE',
+                         'MARKETING','LOAN_PAYMENT',
+                         'OWNER_WITHDRAWAL','OTHER_EXPENSE'
                      )),
 
     -- Descripción obligatoria — el dueño debe saber qué fue
@@ -841,9 +841,9 @@ CREATE TABLE tenant_template.transactions (
     currency_code    VARCHAR(3) NOT NULL REFERENCES public.currencies(code),
 
     -- Cómo se realizó el movimiento
-    payment_method   VARCHAR(20) NOT NULL DEFAULT 'cash'
+    payment_method   VARCHAR(20)  NOT NULL DEFAULT 'CASH'
                      CHECK (payment_method IN (
-                         'cash','transfer','yape','plin','card','check','other'
+                         'CASH','TRANSFER','YAPE','PLIN','CARD','CHECK','OTHER'
                      )),
 
     -- Referencia del pago externo
@@ -938,8 +938,8 @@ CREATE TABLE tenant_template.cash_registers (
     currency_code   VARCHAR(3) NOT NULL REFERENCES public.currencies(code),
 
     -- open → turno activo · closed → turno terminado
-    status          VARCHAR(10) NOT NULL DEFAULT 'open'
-                    CHECK (status IN ('open','closed')),
+    status          VARCHAR(10)  NOT NULL DEFAULT 'OPEN'
+                    CHECK (status IN ('OPEN','CLOSED')),
 
     -- Notas al abrir → "Fondo reducido por pago urgente ayer"
     opening_notes   TEXT,
