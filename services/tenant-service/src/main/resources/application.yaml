@@ -1,0 +1,21 @@
+# =====================================================================
+# MIRO ERP — tenant-service
+# Configuración común a todos los ambientes
+# =====================================================================
+
+spring:
+  application:
+    name: tenant-service
+
+# ─── SERVIDOR ─────────────────────────────────────────────────────
+# gateway  → 8080 · auth → 8081 · tenant   → 8082
+# product  → 8083 · inventory → 8084 · sales → 8085
+# finance  → 8086 · ai → 8087
+server:
+  port: 8082
+
+# ─── LOGGING ──────────────────────────────────────────────────────
+logging:
+  level:
+    com.miroapp: DEBUG
+    org.flywaydb: INFO

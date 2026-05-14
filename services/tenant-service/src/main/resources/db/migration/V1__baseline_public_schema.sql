@@ -1,0 +1,42 @@
+-- =====================================================================
+-- MIRO ERP — Flyway Migration
+-- Versión: V1
+-- Nombre: baseline_public_schema
+-- Descripción: Línea base del schema public
+--              Las tablas ya fueron creadas manualmente en DBeaver.
+--              Este script marca el punto de partida para Flyway.
+--              A partir de V2 Flyway gestiona todos los cambios.
+-- Fecha: 2026-05-14
+-- =====================================================================
+--
+-- TABLAS YA EXISTENTES EN EL SCHEMA PUBLIC:
+-- public.countries             → 9 países de LATAM + USA
+-- public.currencies            → 9 monedas
+-- public.tax_types             → impuestos por país (IGV, IVA, etc)
+-- public.plans                 → Starter, Business, Enterprise
+-- public.tenants               → empresas cliente de Miro
+-- public.tenant_subscriptions  → historial de pagos y planes
+--
+-- TABLAS YA EXISTENTES EN EL SCHEMA TENANT_TEMPLATE:
+-- tenant_template.branches
+-- tenant_template.users
+-- tenant_template.categories
+-- tenant_template.products
+-- tenant_template.product_variants
+-- tenant_template.stock
+-- tenant_template.stock_movements
+-- tenant_template.sales
+-- tenant_template.sale_items
+-- tenant_template.sale_payments
+-- tenant_template.transactions
+-- tenant_template.cash_registers
+-- tenant_template.suppliers
+--
+-- Este script no ejecuta ningún DDL.
+-- Solo sirve como registro histórico para Flyway.
+-- =====================================================================
+
+-- Flyway registra este script en la tabla flyway_schema_history
+-- y marca el schema como inicializado en este punto.
+-- Los scripts V2, V3, V4... se ejecutarán automáticamente
+-- al arrancar el servicio si no han sido aplicados aún.
