@@ -8,6 +8,8 @@ import com.miroapp.tenant.exception.TenantNotFoundException;
 import com.miroapp.tenant.repository.TenantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,18 @@ import java.time.temporal.ChronoUnit;
 public class TenantService {
 
   private final TenantRepository tenantRepository;
+  private final MessageSource messageSource;
+
+  // ─── HELPER ───────────────────────────────────────────────────
+  // Obtiene mensaje del properties con parámetros opcionales
+  private String getMessage(String code, Object... args) {
+    return messageSource.getMessage(
+      code,
+      args,
+      code,
+      LocaleContextHolder.getLocale()
+    );
+  }
 
   // ─── REGISTRAR TENANT ─────────────────────────────────────────
   // @Transactional → si algo falla → rollback automático
@@ -46,13 +60,16 @@ public class TenantService {
     // ── VALIDACIÓN 1: slug único ───────────────────────────────
     if (tenantRepository.existsBySlug(request.getSlug())) {
       log.warn("Intento de registro con slug duplicado: {}", request.getSlug());
-      throw new TenantAlreadyExistsException("slug", request.getSlug());
+      throw new TenantAlreadyExistsException(getMessage("tenant.already.exists.slug",
+        request.getSlug()), "slug");
     }
 
     // ── VALIDACIÓN 1: email único ───────────────────────────────
     if (tenantRepository.existsByAdminEmail(request.getAdminEmail())) {
       log.warn("Intento de registro con email duplicado: {}", request.getAdminEmail());
-      throw new TenantAlreadyExistsException("email", request.getAdminEmail());
+      throw new TenantAlreadyExistsException(
+        getMessage("tenant.already.exists.email",
+          request.getAdminEmail()), "adminEmail");
     }
 
     // ── CREAR LA ENTITY ────────────────────────────────────────
@@ -94,7 +111,7 @@ public class TenantService {
 
     Tenant tenant = tenantRepository
       .findActiveTenantBySlug(slug)
-      .orElseThrow(() -> new TenantNotFoundException(slug));
+      .orElseThrow(() -> new TenantNotFoundException(getMessage("tenant.not.found", slug)));
 
     return toResponse(tenant);
   }
@@ -110,14 +127,16 @@ public class TenantService {
       //long daysLeft = ChronoUnit.DAYS.between(OffsetDateTime.now(), tenant.getTrialEndsAt());
       long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), tenant.getTrialEndsAt().toLocalDate());
       if (daysLeft > 0) {
-        trialMessage = String.format(
-          "Tienes %d día%s de prueba gratuita restante%s",
+        // suffix para singular/plural en español
+        String suffix = daysLeft == 1 ? "" : "s";
+        trialMessage = getMessage(
+          "tenant.trial.days.remaining",
           daysLeft,
-          daysLeft == 1 ? "" : "s",
-          daysLeft == 1 ? "" : "s"
+          suffix,
+          suffix
         );
       } else {
-        trialMessage = "Tu período de prueba ha vencido";
+        trialMessage = getMessage("tenant.trial.expired");
       }
     }
 

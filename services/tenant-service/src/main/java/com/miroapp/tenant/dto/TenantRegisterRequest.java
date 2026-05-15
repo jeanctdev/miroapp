@@ -32,48 +32,48 @@ public class TenantRegisterRequest {
   // slug → identificador único del negocio
   // Solo letras minúsculas, números y guiones
   // Ejemplo: "venedog", "farmacia-central", "extintores-peru"
-  @NotBlank(message = "El slug es obligatorio")
-  @Size(min = 3, max = 63, message = "El slug debe tener entre 3 y 63 caracteres")
+  @NotBlank(message = "{tenant.slug.required}")
+  @Size(min = 3, max = 63, message = "{tenant.slug.size}")
   @Pattern(
     regexp = "^[a-z0-9]+(?:-[a-z0-9]+)*$",
-    message = "El slug solo puede contener letras minúsculas, números y guiones"
+    message = "{tenant.slug.pattern}"
   )
   private String slug;
 
   // Nombre comercial de la empresa
-  @NotBlank(message = "El nombre de la empresa es obligatorio")
-  @Size(max = 200, message = "El nombre no puede superar 200 caracteres")
+  @NotBlank(message = "{tenant.name.required}")
+  @Size(max = 200, message = "{tenant.name.max}")
   private String name;
 
   // Código ISO del país — PE, CO, MX, VE, CL, AR, EC, BR, US
-  @NotBlank(message = "El país es obligatorio")
-  @Size(min = 2, max = 2, message = "El código de país debe tener exactamente 2 caracteres")
+  @NotBlank(message = "{tenant.country.required}")
+  @Size(min = 2, max = 2, message = "{tenant.country.size}")
   private String countryCode;
 
   // Código ISO de la moneda — PEN, USD, COP, MXN, etc
-  @NotBlank(message = "La moneda es obligatoria")
-  @Size(min = 3, max = 3, message = "El código de moneda debe tener exactamente 3 caracteres")
+  @NotBlank(message = "{tenant.currency.required}")
+  @Size(min = 3, max = 3, message = "{tenant.currency.size}")
   private String currencyCode;
 
   // ID del plan elegido — Starter, Business o Enterprise
-  @NotNull(message = "El plan es obligatorio")
+  @NotNull(message = "{tenant.plan.required}")
   private UUID planId;
 
 // ─── DATOS DEL ADMINISTRADOR ──────────────────────────────────
 
   // Email del administrador — será su usuario de login
-  @NotBlank(message = "El email del administrador es obligatorio")
-  @Email(message = "El email no tiene un formato válido")
-  @Size(max = 255, message = "El email no puede superar 255 caracteres")
+  @NotBlank(message = "{tenant.admin.email.required}")
+  @Email(message = "{tenant.admin.email.invalid}")
+  @Size(max = 255, message = "{tenant.admin.email.max}")
   private String adminEmail;
 
   // Nombre completo del administrador
-  @NotBlank(message = "El nombre del administrador es obligatorio")
-  @Size(max = 200, message = "El nombre no puede superar 200 caracteres")
+  @NotBlank(message = "{tenant.admin.name.required}")
+  @Size(max = 200, message = "{tenant.admin.name.max}")
   private String adminName;
 
   // Teléfono — opcional
-  @Size(max = 20, message = "El teléfono no puede superar 20 caracteres")
+  @Size(max = 20, message = "{tenant.admin.phone.max}")
   private String adminPhone;
 
   // ─── DATOS OPCIONALES ─────────────────────────────────────────

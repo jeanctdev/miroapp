@@ -2,6 +2,9 @@ package com.miroapp.common.exception;
 
 import com.miroapp.common.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -19,13 +22,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 // → BusinessException      → handler específico
 // → ResourceNotFoundException → handler específico
 // → Exception              → handler genérico (último recurso)
+// Usa MessageSource para obtener mensajes desde messages.properties
 // =====================================================================
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+
+  private final MessageSource messageSource;
+
+  // ─── HELPER ───────────────────────────────────────────────────
+  // Obtiene mensaje del properties con parámetros opcionales
+  // Retorna el código como fallback si no encuentra la clave
+  private String getMessage(String code, Object... args) {
+    return messageSource.getMessage(code, args, code, LocaleContextHolder.getLocale());
+  }
+
 
   // ─── ERRORES DE VALIDACIÓN ────────────────────────────────────
   // Se lanza cuando @Valid falla en el Controller
-  // Ejemplo: email inválido, slug vacío, planId null
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<ApiResponse<Void>> handleValidationErrors(
     MethodArgumentNotValidException ex,
@@ -40,9 +54,7 @@ public class GlobalExceptionHandler {
       .orElse(null);
 
     String field = fieldError != null ? fieldError.getField() : null;
-    String message = fieldError != null
-      ? fieldError.getDefaultMessage()
-      : "Error de validación";
+    String message = fieldError != null ? fieldError.getDefaultMessage() : getMessage("error.validation");
 
     return ResponseEntity
       .status(HttpStatus.BAD_REQUEST)
@@ -56,8 +68,7 @@ public class GlobalExceptionHandler {
   }
 
   // ─── ERRORES DE NEGOCIO ───────────────────────────────────────
-  // Se lanza desde el Service cuando una regla de negocio falla
-  // Ejemplo: slug duplicado, límite de plan alcanzado
+  // El Handler decide el HTTP status según el código del error
   @ExceptionHandler(BusinessException.class)
   public ResponseEntity<ApiResponse<Void>> handleBusinessException(
     BusinessException ex,
@@ -120,7 +131,7 @@ public class GlobalExceptionHandler {
       .status(HttpStatus.INTERNAL_SERVER_ERROR)
       .body(ApiResponse.error(
         ErrorCodes.INTERNAL_SERVER_ERROR,
-        "Ocurrió un error inesperado. Por favor intenta de nuevo.",
+        getMessage("error.internal"),
         null,
         request.getRequestURI(),
         HttpStatus.INTERNAL_SERVER_ERROR.value()

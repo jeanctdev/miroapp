@@ -14,8 +14,8 @@ import com.miroapp.common.exception.ResourceNotFoundException;
 // =====================================================================
 public class TenantNotFoundException extends ResourceNotFoundException {
 
-  public TenantNotFoundException(String slug) {
-    super("Tenant", slug);
+  public TenantNotFoundException(String message) {
+    super(message);
   }
 
 }

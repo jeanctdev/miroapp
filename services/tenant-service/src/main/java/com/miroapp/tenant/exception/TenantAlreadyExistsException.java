@@ -2,7 +2,6 @@ package com.miroapp.tenant.exception;
 
 import com.miroapp.common.exception.BusinessException;
 import com.miroapp.common.exception.ErrorCodes;
-import org.springframework.http.HttpStatus;
 
 // =====================================================================
 // TenantAlreadyExistsException
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 public class TenantAlreadyExistsException extends BusinessException {
 
   // Constructor para slug duplicado
-  public TenantAlreadyExistsException(String field, String value) {
+  public TenantAlreadyExistsException(String message, String field) {
     super(
       ErrorCodes.TENANT_ALREADY_EXISTS,
-      String.format("El %s '%s' ya está registrado en el sistema", field, value),
+      message,
       field
     );
   }
