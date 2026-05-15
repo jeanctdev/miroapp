@@ -1,5 +1,7 @@
 package com.miroapp.common.exception;
 
+import org.springframework.http.HttpStatus;
+
 // =====================================================================
 // BusinessException — 400 Bad Request (regla de negocio)
 //

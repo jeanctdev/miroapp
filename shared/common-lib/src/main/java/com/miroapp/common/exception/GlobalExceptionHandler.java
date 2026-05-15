@@ -63,14 +63,24 @@ public class GlobalExceptionHandler {
     BusinessException ex,
     HttpServletRequest request) {
 
+    // El código del error determina el HTTP status
+    // Separación limpia: Service → lógica, Handler → HTTP
+    HttpStatus status = switch (ex.getCode()) {
+      case ErrorCodes.TENANT_ALREADY_EXISTS,
+           ErrorCodes.USER_ALREADY_EXISTS   -> HttpStatus.CONFLICT;
+      case ErrorCodes.UNAUTHORIZED          -> HttpStatus.UNAUTHORIZED;
+      case ErrorCodes.FORBIDDEN             -> HttpStatus.FORBIDDEN;
+      default                               -> HttpStatus.BAD_REQUEST;
+    };
+
     return ResponseEntity
-      .status(HttpStatus.BAD_REQUEST)
+      .status(status)
       .body(ApiResponse.error(
         ex.getCode(),
         ex.getMessage(),
         ex.getField(),
         request.getRequestURI(),
-        HttpStatus.BAD_REQUEST.value()
+        status.value()
       ));
   }
 

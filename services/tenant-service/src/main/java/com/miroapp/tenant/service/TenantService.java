@@ -1,0 +1,143 @@
+package com.miroapp.tenant.service;
+
+import com.miroapp.tenant.dto.TenantRegisterRequest;
+import com.miroapp.tenant.dto.TenantResponse;
+import com.miroapp.tenant.entity.Tenant;
+import com.miroapp.tenant.exception.TenantAlreadyExistsException;
+import com.miroapp.tenant.exception.TenantNotFoundException;
+import com.miroapp.tenant.repository.TenantRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+
+// =====================================================================
+// TenantService — lógica de negocio para gestión de tenants
+//
+// @Service → marca esta clase como componente de negocio
+//            Spring la instancia automáticamente
+//
+// @RequiredArgsConstructor → Lombok genera el constructor
+//            con todos los campos final
+//            Es la forma correcta de inyección de dependencias
+//            en Spring Boot moderno (en lugar de @Autowired)
+//
+// @Slf4j → Lombok genera el logger automáticamente
+//          Puedes usar: log.info(), log.debug(), log.error()
+// =====================================================================
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class TenantService {
+
+  private final TenantRepository tenantRepository;
+
+  // ─── REGISTRAR TENANT ─────────────────────────────────────────
+  // @Transactional → si algo falla → rollback automático
+  // Todo el método es una sola transacción ACID
+  @Transactional
+  public TenantResponse registerTenant(TenantRegisterRequest request){
+    log.info("Iniciando registro de tenant con slug: {}", request.getSlug());
+
+    // ── VALIDACIÓN 1: slug único ───────────────────────────────
+    if (tenantRepository.existsBySlug(request.getSlug())) {
+      log.warn("Intento de registro con slug duplicado: {}", request.getSlug());
+      throw new TenantAlreadyExistsException("slug", request.getSlug());
+    }
+
+    // ── VALIDACIÓN 1: email único ───────────────────────────────
+    if (tenantRepository.existsByAdminEmail(request.getAdminEmail())) {
+      log.warn("Intento de registro con email duplicado: {}", request.getAdminEmail());
+      throw new TenantAlreadyExistsException("email", request.getAdminEmail());
+    }
+
+    // ── CREAR LA ENTITY ────────────────────────────────────────
+    // Convertimos el DTO a Entity usando el Builder de Lombok
+    // @PrePersist se ejecutará automáticamente al guardar:
+    // → asigna status = TRIAL
+    // → asigna trialEndsAt = ahora + 14 días
+    // → asigna createdAt y updatedAt
+    Tenant tenant = Tenant.builder()
+      .slug(request.getSlug())
+      .name(request.getName())
+      .countryCode(request.getCountryCode().toUpperCase())
+      .currencyCode(request.getCurrencyCode().toUpperCase())
+      .planId(request.getPlanId())
+      .adminEmail(request.getAdminEmail().toLowerCase())
+      .adminName(request.getAdminName())
+      .adminPhone(request.getAdminPhone())
+      .taxInfo(request.getTaxInfo())
+      .build();
+
+    // ── GUARDAR EN LA BD ───────────────────────────────────────
+    // save() ejecuta el INSERT en public.tenants
+    // @PrePersist se ejecuta aquí automáticamente
+    Tenant savedTenant = tenantRepository.save(tenant);
+
+    log.info("Tenant registrado exitosamente: {} con ID: {}",
+      savedTenant.getSlug(), savedTenant.getId());
+
+    // ── RETORNAR RESPONSE ──────────────────────────────────────
+    return toResponse(savedTenant);
+  }
+
+  // ─── OBTENER TENANT POR SLUG ──────────────────────────────────
+  // Solo lectura → no necesita @Transactional
+  // readOnly = true → optimización de performance
+  @Transactional(readOnly = true)
+  public TenantResponse getTenantBySlug(String slug) {
+    log.debug("Buscando tenant con slug: {}", slug);
+
+    Tenant tenant = tenantRepository
+      .findActiveTenantBySlug(slug)
+      .orElseThrow(() -> new TenantNotFoundException(slug));
+
+    return toResponse(tenant);
+  }
+
+  // ─── CONVERTIR ENTITY A RESPONSE ──────────────────────────────
+  // Método privado — solo lo usa este Service
+  // Convierte la Entity (BD) al DTO (lo que ve el cliente)
+  // Calcula el mensaje del trial dinámicamente
+  private TenantResponse toResponse(Tenant tenant) {
+    // Calculamos los días restantes del trial
+    String trialMessage = null;
+    if (tenant.getTrialEndsAt() != null) {
+      //long daysLeft = ChronoUnit.DAYS.between(OffsetDateTime.now(), tenant.getTrialEndsAt());
+      long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), tenant.getTrialEndsAt().toLocalDate());
+      if (daysLeft > 0) {
+        trialMessage = String.format(
+          "Tienes %d día%s de prueba gratuita restante%s",
+          daysLeft,
+          daysLeft == 1 ? "" : "s",
+          daysLeft == 1 ? "" : "s"
+        );
+      } else {
+        trialMessage = "Tu período de prueba ha vencido";
+      }
+    }
+
+    return TenantResponse.builder()
+      .id(tenant.getId())
+      .slug(tenant.getSlug())
+      .name(tenant.getName())
+      .countryCode(tenant.getCountryCode())
+      .currencyCode(tenant.getCurrencyCode())
+      .planId(tenant.getPlanId())
+      .adminEmail(tenant.getAdminEmail())
+      .adminName(tenant.getAdminName())
+      .adminPhone(tenant.getAdminPhone())
+      .taxInfo(tenant.getTaxInfo())
+      .status(tenant.getStatus())
+      .trialEndsAt(tenant.getTrialEndsAt())
+      .createdAt(tenant.getCreatedAt())
+      .updatedAt(tenant.getUpdatedAt())
+      .trialMessage(trialMessage)
+      .build();
+  }
+
+}

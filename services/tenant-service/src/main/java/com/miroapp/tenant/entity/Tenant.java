@@ -9,6 +9,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.OffsetDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -93,14 +94,16 @@ public class Tenant {
   // @JdbcTypeCode(SqlTypes.JSON) → Hibernate serializa/deserializa JSON
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "tax_info", columnDefinition = "jsonb")
-  private Map<String, Object> taxInfo;
+  @Builder.Default
+  private Map<String, Object> taxInfo = new HashMap<>();
 
   // ─── CONFIGURACIONES DEL TENANT ───────────────────────────────
   // Configuraciones personalizadas en JSONB
   // timezone_override, logo_url, primary_color, etc
   @JdbcTypeCode(SqlTypes.JSON)
   @Column(name = "settings", columnDefinition = "jsonb")
-  private Map<String, Object> settings;
+  @Builder.Default
+  private Map<String, Object> settings = new HashMap<>();
 
   // ─── STATUS ───────────────────────────────────────────────────
   // @Enumerated(EnumType.STRING) → guarda el nombre del Enum en BD
