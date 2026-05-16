@@ -81,6 +81,8 @@ public class GlobalExceptionHandler {
            ErrorCodes.USER_ALREADY_EXISTS   -> HttpStatus.CONFLICT;
       case ErrorCodes.UNAUTHORIZED          -> HttpStatus.UNAUTHORIZED;
       case ErrorCodes.FORBIDDEN             -> HttpStatus.FORBIDDEN;
+      case ErrorCodes.SCHEMA_CREATION_FAILED,
+           ErrorCodes.MIGRATION_FAILED-> HttpStatus.INTERNAL_SERVER_ERROR;
       default                               -> HttpStatus.BAD_REQUEST;
     };
 

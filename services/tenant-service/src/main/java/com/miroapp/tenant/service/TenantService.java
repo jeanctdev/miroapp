@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 
 // =====================================================================
@@ -38,6 +37,7 @@ public class TenantService {
 
   private final TenantRepository tenantRepository;
   private final MessageSource messageSource;
+  private final TenantSchemaService tenantSchemaService;
 
   // ─── HELPER ───────────────────────────────────────────────────
   // Obtiene mensaje del properties con parámetros opcionales
@@ -94,6 +94,9 @@ public class TenantService {
     // save() ejecuta el INSERT en public.tenants
     // @PrePersist se ejecuta aquí automáticamente
     Tenant savedTenant = tenantRepository.save(tenant);
+
+    // ── CREAR SCHEMA DEL TENANT ───────────────────────────────
+    tenantSchemaService.createTenantSchema(savedTenant.getSlug());
 
     log.info("Tenant registrado exitosamente: {} con ID: {}",
       savedTenant.getSlug(), savedTenant.getId());
