@@ -29,6 +29,12 @@ import java.time.temporal.ChronoUnit;
 //
 // @Slf4j → Lombok genera el logger automáticamente
 //          Puedes usar: log.info(), log.debug(), log.error()
+// Flujo de registro completo:
+// 1. Validar slug y email únicos
+// 2. Guardar en public.tenants
+// 3. Crear schema con Flyway (TenantSchemaService)
+// 4. Crear TENANT_ADMIN en {tenant}.users (UserCreationService)
+// 5. Retornar datos + contraseña temporal
 // =====================================================================
 @Slf4j
 @Service
@@ -36,8 +42,9 @@ import java.time.temporal.ChronoUnit;
 public class TenantService {
 
   private final TenantRepository tenantRepository;
-  private final MessageSource messageSource;
   private final TenantSchemaService tenantSchemaService;
+  private final UserCreationService userCreationService;
+  private final MessageSource messageSource;
 
   // ─── HELPER ───────────────────────────────────────────────────
   // Obtiene mensaje del properties con parámetros opcionales
@@ -98,11 +105,20 @@ public class TenantService {
     // ── CREAR SCHEMA DEL TENANT ───────────────────────────────
     tenantSchemaService.createTenantSchema(savedTenant.getSlug());
 
+    // ── CREAR TENANT_ADMIN ────────────────────────────────────
+    // Retorna la contraseña temporal en texto plano
+    // Es la ÚNICA vez que sale del sistema
+    String temporaryPassword = userCreationService.createTenantAdmin(
+      savedTenant.getSlug(),
+      savedTenant.getAdminEmail(),
+      savedTenant.getAdminName()
+    );
+
     log.info("Tenant registrado exitosamente: {} con ID: {}",
       savedTenant.getSlug(), savedTenant.getId());
 
     // ── RETORNAR RESPONSE ──────────────────────────────────────
-    return toResponse(savedTenant);
+    return toResponse(savedTenant, temporaryPassword);
   }
 
   // ─── OBTENER TENANT POR SLUG ──────────────────────────────────
@@ -116,14 +132,14 @@ public class TenantService {
       .findActiveTenantBySlug(slug)
       .orElseThrow(() -> new TenantNotFoundException(getMessage("tenant.not.found", slug)));
 
-    return toResponse(tenant);
+    return toResponse(tenant, null);
   }
 
   // ─── CONVERTIR ENTITY A RESPONSE ──────────────────────────────
   // Método privado — solo lo usa este Service
   // Convierte la Entity (BD) al DTO (lo que ve el cliente)
   // Calcula el mensaje del trial dinámicamente
-  private TenantResponse toResponse(Tenant tenant) {
+  private TenantResponse toResponse(Tenant tenant, String temporaryPassword) {
     // Calculamos los días restantes del trial
     String trialMessage = null;
     if (tenant.getTrialEndsAt() != null) {
@@ -143,6 +159,11 @@ public class TenantService {
       }
     }
 
+    // Mensaje de instrucciones — solo al registrarse
+    String instructionMessage = temporaryPassword != null
+      ? getMessage("tenant.registration.instruction")
+      : null;
+
     return TenantResponse.builder()
       .id(tenant.getId())
       .slug(tenant.getSlug())
@@ -159,6 +180,8 @@ public class TenantService {
       .createdAt(tenant.getCreatedAt())
       .updatedAt(tenant.getUpdatedAt())
       .trialMessage(trialMessage)
+      .temporaryPassword(temporaryPassword)
+      .instructionMessage(instructionMessage)
       .build();
   }
 

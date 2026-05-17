@@ -8,19 +8,24 @@
 		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.miroapp</groupId>
-	<artifactId>tenant-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 
-    <name>tenant-service</name>
-    <description>Miro ERP — Servicio de gestión de empresas cliente (tenants)</description>
-	<properties>
+    <groupId>com.miroapp</groupId>
+    <artifactId>auth-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>auth-service</name>
+    <description>Miro ERP — Servicio de autenticación y gestión de usuarios</description>
+
+    <properties>
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,24 +55,42 @@
 			<optional>true</optional>
 		</dependency>
 
-        <!-- common-lib — librería compartida de Miro -->
-        <!-- ApiResponse, ApiError, GlobalExceptionHandler, excepciones -->
+        <!-- JJWT — generación y validación de JWT -->
+        <!-- io.jsonwebtoken es la librería estándar para JWT en Java -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- common-lib — ApiResponse, GlobalExceptionHandler -->
         <dependency>
             <groupId>com.miroapp</groupId>
             <artifactId>common-lib</artifactId>
             <version>1.0.0</version>
         </dependency>
 
-        <!-- BCrypt — para hashear la contraseña temporal del admin -->
-        <!-- Solo usamos el encoder, sin Spring Security completo  -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-        </dependency>
-
+        <!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

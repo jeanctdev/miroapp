@@ -165,6 +165,25 @@ CREATE TABLE tenant_template.users (
     -- Útil para detectar usuarios inactivos
     last_login_at TIMESTAMP WITH TIME ZONE,
 
+    -- ─── SEGURIDAD ──────────────────────────────────────────────
+    -- true  → debe cambiar su contraseña al próximo login
+    -- false → ya cambió su contraseña
+    must_change_password BOOLEAN   NOT NULL DEFAULT false,
+
+    -- Contador de intentos fallidos de login
+    -- Al llegar a 5 → cuenta bloqueada
+    -- Se resetea a 0 al hacer login exitoso
+    failed_attempts      SMALLINT  NOT NULL DEFAULT 0,
+
+    -- Hasta cuándo está bloqueada la cuenta
+    -- NULL    → cuenta activa
+    -- datetime → bloqueada hasta esa fecha/hora
+    locked_until         TIMESTAMP WITH TIME ZONE,
+
+    -- Cuándo cambió su contraseña por última vez
+    -- Útil para políticas de vencimiento en el futuro
+    password_changed_at  TIMESTAMP WITH TIME ZONE,
+
     -- Auditoría estándar
     created_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),

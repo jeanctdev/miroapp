@@ -82,7 +82,8 @@ public class GlobalExceptionHandler {
       case ErrorCodes.UNAUTHORIZED          -> HttpStatus.UNAUTHORIZED;
       case ErrorCodes.FORBIDDEN             -> HttpStatus.FORBIDDEN;
       case ErrorCodes.SCHEMA_CREATION_FAILED,
-           ErrorCodes.MIGRATION_FAILED-> HttpStatus.INTERNAL_SERVER_ERROR;
+           ErrorCodes.MIGRATION_FAILED,
+           ErrorCodes.USER_CREATION_FAILED -> HttpStatus.INTERNAL_SERVER_ERROR;
       default                               -> HttpStatus.BAD_REQUEST;
     };
 

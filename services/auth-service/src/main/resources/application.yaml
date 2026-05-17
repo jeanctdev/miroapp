@@ -1,0 +1,20 @@
+# =====================================================================
+# MIRO ERP — auth-service
+# Configuración común a todos los ambientes
+# =====================================================================
+
+spring:
+  application:
+    name: auth-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+# ─── SERVIDOR ─────────────────────────────────────────────────────────
+server:
+  port: 8081
+
+# ─── LOGGING ──────────────────────────────────────────────────────────
+logging:
+  level:
+    com.miroapp: DEBUG
+    org.flywaydb: INFO

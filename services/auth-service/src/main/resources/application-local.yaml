@@ -1,0 +1,37 @@
+# =====================================================================
+# MIRO ERP — auth-service
+# Ambiente: LOCAL
+# =====================================================================
+
+spring:
+
+  # ─── BASE DE DATOS ────────────────────────────────────────────────
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:miroapp}
+    username: ${POSTGRES_USER:miroapp_user}
+    password: ${POSTGRES_PASSWORD:miroapp_pass}
+    driver-class-name: org.postgresql.Driver
+
+  # ─── JPA / HIBERNATE ──────────────────────────────────────────────
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  # ─── FLYWAY ───────────────────────────────────────────────────────
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# ─── JWT ──────────────────────────────────────────────────────────────
+# secret → clave secreta para firmar los tokens
+# expiration → tiempo de vida del token en milisegundos
+# 86400000 = 24 horas
+jwt:
+  secret: ${JWT_SECRET:miroapp-secret-key-local-development-2026-very-long-key}
+  expiration: ${JWT_EXPIRATION:86400000}

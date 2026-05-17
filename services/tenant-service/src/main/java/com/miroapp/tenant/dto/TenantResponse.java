@@ -44,4 +44,14 @@ public class TenantResponse {
   // Mensaje informativo sobre el estado del trial
   // "Tienes 10 días de prueba gratuita restantes"
   private String trialMessage;
+
+  // ─── SEGURIDAD — solo aparece al registrarse ──────────────────
+  // @JsonInclude(NON_NULL) → si es null no aparece en el JSON
+  // Al registrarse → aparece con la contraseña temporal
+  // En GET by slug → es null → no aparece ✅
+  private String temporaryPassword;
+
+  // Mensaje de instrucciones para el cliente
+  // Solo aparece al registrarse
+  private String instructionMessage;
 }

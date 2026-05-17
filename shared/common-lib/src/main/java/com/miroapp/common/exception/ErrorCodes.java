@@ -40,4 +40,5 @@ public class ErrorCodes {
   // ─── ERRORES DE INFRAESTRUCTURA ───────────────────────────────
   public static final String SCHEMA_CREATION_FAILED = "SCHEMA_CREATION_FAILED";
   public static final String MIGRATION_FAILED       = "MIGRATION_FAILED";
+  public static final String USER_CREATION_FAILED   = "USER_CREATION_FAILED";
 }

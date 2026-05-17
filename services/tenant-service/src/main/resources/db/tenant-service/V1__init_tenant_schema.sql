@@ -34,22 +34,43 @@ CREATE INDEX IF NOT EXISTS idx_branches_active ON branches(active);
 -- TABLA 2: users — Usuarios del sistema
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS users (
-    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email         VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    first_name    VARCHAR(100) NOT NULL,
-    last_name     VARCHAR(100) NOT NULL,
-    phone         VARCHAR(20),
-    role          VARCHAR(20)  NOT NULL DEFAULT 'CASHIER'
-                  CHECK (role IN ('TENANT_ADMIN','MANAGER','CASHIER','VIEWER')),
-    branch_id     UUID REFERENCES branches(id),
-    avatar_url    VARCHAR(500),
-    active        BOOLEAN NOT NULL DEFAULT true,
-    last_login_at TIMESTAMP WITH TIME ZONE,
-    created_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    updated_at    TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    created_by    UUID,
-    deleted_at    TIMESTAMP WITH TIME ZONE
+    id                   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email                VARCHAR(255) NOT NULL UNIQUE,
+    password_hash        VARCHAR(255) NOT NULL,
+    first_name           VARCHAR(100) NOT NULL,
+    last_name            VARCHAR(100) NOT NULL,
+    phone                VARCHAR(20),
+    role                 VARCHAR(20)  NOT NULL DEFAULT 'CASHIER'
+                         CHECK (role IN ('TENANT_ADMIN','MANAGER','CASHIER','VIEWER')),
+    branch_id            UUID REFERENCES branches(id),
+    avatar_url           VARCHAR(500),
+    active               BOOLEAN NOT NULL DEFAULT true,
+    last_login_at        TIMESTAMP WITH TIME ZONE,
+
+    -- ─── SEGURIDAD ──────────────────────────────────────────────
+    -- true  → debe cambiar su contraseña al próximo login
+    -- false → ya cambió su contraseña
+    must_change_password BOOLEAN   NOT NULL DEFAULT false,
+
+    -- Contador de intentos fallidos de login
+    -- Al llegar a 5 → cuenta bloqueada
+    -- Se resetea a 0 al hacer login exitoso
+    failed_attempts      SMALLINT  NOT NULL DEFAULT 0,
+
+    -- Hasta cuándo está bloqueada la cuenta
+    -- NULL    → cuenta activa
+    -- datetime → bloqueada hasta esa fecha/hora
+    locked_until         TIMESTAMP WITH TIME ZONE,
+
+    -- Cuándo cambió su contraseña por última vez
+    -- Útil para políticas de vencimiento en el futuro
+    password_changed_at  TIMESTAMP WITH TIME ZONE,
+
+    -- ─── AUDITORÍA ──────────────────────────────────────────────
+    created_at           TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    updated_at           TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    created_by           UUID,
+    deleted_at           TIMESTAMP WITH TIME ZONE
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email   ON users(email);
