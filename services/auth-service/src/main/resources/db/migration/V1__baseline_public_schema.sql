@@ -1,0 +1,13 @@
+-- =====================================================================
+-- MIRO ERP — auth-service Flyway baseline
+-- Versión: V1
+-- Descripción: Línea base del schema public para auth-service
+--              Las tablas ya fueron creadas por tenant-service.
+--              Este script marca el punto de partida para Flyway.
+-- Fecha: 2026-05-16
+-- =====================================================================
+
+-- Este script no ejecuta ningún DDL.
+-- auth-service solo LEE de public.tenants
+-- y ESCRIBE en {tenant}.users
+-- Flyway solo necesita este baseline para arrancar correctamente.

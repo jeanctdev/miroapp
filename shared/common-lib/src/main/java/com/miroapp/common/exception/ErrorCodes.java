@@ -27,8 +27,11 @@ public class ErrorCodes {
   // Reglas del negocio violadas
   public static final String BUSINESS_RULE_VIOLATION = "BUSINESS_RULE_VIOLATION";
   // ─── ERRORES DE AUTENTICACIÓN ─────────────────────────────────
-  public static final String UNAUTHORIZED = "UNAUTHORIZED";
-  public static final String FORBIDDEN    = "FORBIDDEN";
+  public static final String UNAUTHORIZED              = "UNAUTHORIZED";
+  public static final String FORBIDDEN                 = "FORBIDDEN";
+  public static final String INVALID_CREDENTIALS       = "INVALID_CREDENTIALS";
+  public static final String ACCOUNT_LOCKED            = "ACCOUNT_LOCKED";
+  public static final String PASSWORD_CHANGE_REQUIRED  = "PASSWORD_CHANGE_REQUIRED";
   // ─── ERRORES DE RECURSOS ──────────────────────────────────────
   public static final String RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
   // ─── ERRORES DE CONFLICTO ─────────────────────────────────────
@@ -41,4 +44,5 @@ public class ErrorCodes {
   public static final String SCHEMA_CREATION_FAILED = "SCHEMA_CREATION_FAILED";
   public static final String MIGRATION_FAILED       = "MIGRATION_FAILED";
   public static final String USER_CREATION_FAILED   = "USER_CREATION_FAILED";
+
 }

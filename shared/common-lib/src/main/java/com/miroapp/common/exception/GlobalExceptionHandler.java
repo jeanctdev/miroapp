@@ -78,13 +78,16 @@ public class GlobalExceptionHandler {
     // Separación limpia: Service → lógica, Handler → HTTP
     HttpStatus status = switch (ex.getCode()) {
       case ErrorCodes.TENANT_ALREADY_EXISTS,
-           ErrorCodes.USER_ALREADY_EXISTS   -> HttpStatus.CONFLICT;
-      case ErrorCodes.UNAUTHORIZED          -> HttpStatus.UNAUTHORIZED;
-      case ErrorCodes.FORBIDDEN             -> HttpStatus.FORBIDDEN;
+           ErrorCodes.USER_ALREADY_EXISTS     -> HttpStatus.CONFLICT;
+      case ErrorCodes.UNAUTHORIZED,
+           ErrorCodes.INVALID_CREDENTIALS,
+           ErrorCodes.ACCOUNT_LOCKED          -> HttpStatus.UNAUTHORIZED;
+      case ErrorCodes.FORBIDDEN,
+           ErrorCodes.PASSWORD_CHANGE_REQUIRED -> HttpStatus.FORBIDDEN;
       case ErrorCodes.SCHEMA_CREATION_FAILED,
            ErrorCodes.MIGRATION_FAILED,
-           ErrorCodes.USER_CREATION_FAILED -> HttpStatus.INTERNAL_SERVER_ERROR;
-      default                               -> HttpStatus.BAD_REQUEST;
+           ErrorCodes.USER_CREATION_FAILED    -> HttpStatus.INTERNAL_SERVER_ERROR;
+      default                                 -> HttpStatus.BAD_REQUEST;
     };
 
     return ResponseEntity
