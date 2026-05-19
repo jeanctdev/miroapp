@@ -6,8 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
-  "com.miroapp.auth",    // código del auth-service
-  "com.miroapp.common"   // GlobalExceptionHandler y común
+  "com.miroapp.auth",      // código del auth-service
+  "com.miroapp.common",    // GlobalExceptionHandler
+  "com.miroapp.security"   // JwtUtil, JwtAuthenticationFilter ← nuevo
 })
 public class AuthServiceApplication {
 

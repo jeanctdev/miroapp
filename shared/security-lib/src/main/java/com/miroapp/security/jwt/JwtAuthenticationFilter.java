@@ -1,6 +1,5 @@
-package com.miroapp.auth.config;
+package com.miroapp.security.jwt;
 
-import com.miroapp.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

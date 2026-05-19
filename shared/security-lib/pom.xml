@@ -8,74 +8,57 @@
 		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
     <groupId>com.miroapp</groupId>
-    <artifactId>auth-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>auth-service</name>
-    <description>Miro ERP — Servicio de autenticación y gestión de usuarios</description>
+    <artifactId>security-lib</artifactId>
+    <version>1.0.0</version>
+    <name>security-lib</name>
+    <description>Miro ERP — Librería de seguridad compartida entre todos los microservicios</description>
 
     <properties>
 		<java.version>21</java.version>
 	</properties>
+
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-validation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-database-postgresql</artifactId>
-		</dependency>
 
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-        <!-- JDBC Template — para ejecutar SET search_path dinámicamente -->
+        <!-- JJWT — para generar y validar JWT -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.13.0</version>
+            <scope>runtime</scope>
         </dependency>
 
-        <!-- common-lib — ApiResponse, GlobalExceptionHandler -->
+        <!-- common-lib — ApiResponse, ErrorCodes -->
         <dependency>
             <groupId>com.miroapp</groupId>
             <artifactId>common-lib</artifactId>
             <version>1.0.0</version>
         </dependency>
 
-        <!-- security-lib — JwtUtil, JwtAuthenticationFilter -->
-        <dependency>
-            <groupId>com.miroapp</groupId>
-            <artifactId>security-lib</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!-- Test -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -100,6 +83,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+                    <!-- skip → no genera JAR ejecutable -->
+                    <!-- security-lib es una librería, no una app -->
+                    <skip>true</skip>
 				</configuration>
 			</plugin>
 			<plugin>

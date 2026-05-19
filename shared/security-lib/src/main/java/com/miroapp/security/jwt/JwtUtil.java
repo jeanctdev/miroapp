@@ -1,4 +1,4 @@
-package com.miroapp.auth.util;
+package com.miroapp.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
