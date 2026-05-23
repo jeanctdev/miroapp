@@ -1,6 +1,7 @@
 package com.miroapp.common.exception;
 
-import org.springframework.http.HttpStatus;
+
+import lombok.Getter;
 
 // =====================================================================
 // BusinessException — 400 Bad Request (regla de negocio)
@@ -16,7 +17,8 @@ import org.springframework.http.HttpStatus;
 //
 // El GlobalExceptionHandler la captura y retorna:
 // HTTP 400 + code: definido al lanzar la excepción
-// =====================================================================
+// ========================================================
+@Getter
 public class BusinessException extends RuntimeException{
 
   // Código del error — se usa en ApiError.code
@@ -39,11 +41,5 @@ public class BusinessException extends RuntimeException{
     this.field = field;
   }
 
-  public String getCode() {
-    return code;
-  }
 
-  public String getField() {
-    return field;
-  }
 }

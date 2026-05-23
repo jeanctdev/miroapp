@@ -23,7 +23,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = {
   "com.miroapp.tenant",   // código del tenant-service
-  "com.miroapp.common"    // GlobalExceptionHandler y común
 })
 public class TenantServiceApplication {
 

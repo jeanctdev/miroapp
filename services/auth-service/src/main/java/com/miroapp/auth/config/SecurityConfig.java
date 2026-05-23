@@ -1,6 +1,6 @@
 package com.miroapp.auth.config;
 
-import com.miroapp.security.jwt.JwtAuthenticationFilter;
+import com.miroapp.auth.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

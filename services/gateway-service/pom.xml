@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.14</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+    <groupId>com.miroapp</groupId>
+    <artifactId>gateway-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>gateway-service</name>
+    <description>API Gateway - Punto de entrada unico del sistema MIRO ERP. Puerto 8080.</description>
+
+    <properties>
+		<java.version>21</java.version>
+		<spring-cloud.version>2025.0.2</spring-cloud.version>
+	</properties>
+	<dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway-server-webflux</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--
+        ═══════════════════════════════════════════════════════════════
+        3. COMMON-LIB v1.0.0
+        ═══════════════════════════════════════════════════════════════
+        Nuestra librería compartida. La usamos para:
+        - ApiResponse<T>          → respuestas de error en formato estándar
+        - GlobalExceptionHandler  → captura excepciones no controladas
+        - ErrorCodes              → códigos de error en MAYUSCULAS
+
+        El gateway devuelve errores (401, 403, 503) en el mismo formato
+        que todos los microservicios. Sin esto, el frontend tendría que
+        manejar dos formatos distintos de error.
+        ═══════════════════════════════════════════════════════════════
+        -->
+        <dependency>
+            <groupId>com.miroapp</groupId>
+            <artifactId>common-lib</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--
+        ═══════════════════════════════════════════════════════════════
+        4. SECURITY-LIB v1.0.0
+        ═══════════════════════════════════════════════════════════════
+        Nuestra librería de seguridad. Del gateway usamos SOLO:
+        - JwtUtil → validateToken(), extractTenantSlug(), extractUserId(),
+                    extractRole(), extractBranchId()
+
+        Lo que NO usamos del gateway:
+        - JwtAuthenticationFilter → es MVC (OncePerRequestFilter + Servlet)
+                                    No es compatible con WebFlux.
+                                    Sigue funcionando en auth-service
+                                    y en todos los demás servicios MVC.
+
+        El gateway tiene su propio filtro reactivo (JwtGatewayFilter)
+        que construimos en el PASO 8. Ese filtro usa JwtUtil internamente.
+        ═══════════════════════════════════════════════════════════════
+        -->
+        <dependency>
+            <groupId>com.miroapp</groupId>
+            <artifactId>security-lib</artifactId>
+            <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--
+        ═══════════════════════════════════════════════════════════════
+        5. ACTUATOR
+        ═══════════════════════════════════════════════════════════════
+        Endpoints de monitoreo. En el gateway tiene un endpoint especial:
+
+        GET /actuator/gateway/routes
+          → Lista TODAS las rutas configuradas con sus predicates.
+            Indispensable para debuggear por qué un request no llega
+            al microservicio correcto.
+
+        GET /actuator/health
+          → ¿Está vivo el gateway? Lo usan los health checks de Docker
+            y en el futuro Azure App Service.
+        ═══════════════════════════════════════════════════════════════
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+    <!--
+    ═══════════════════════════════════════════════════════════════════
+    BOM — Bill of Materials de Spring Cloud
+    ═══════════════════════════════════════════════════════════════════
+    Define las versiones exactas de todas las librerías de Spring Cloud
+    que son compatibles entre sí para la versión 2025.0.2.
+
+    Sin esto: pondríamos version en spring-cloud-starter-gateway
+    Con esto: Maven resuelve la versión correcta automáticamente
+              usando la propiedad spring-cloud.version de arriba.
+    ═══════════════════════════════════════════════════════════════════
+    -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-testCompile</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<annotationProcessorPaths>
+								<path>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</path>
+							</annotationProcessorPaths>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

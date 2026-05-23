@@ -1,0 +1,31 @@
+# ═══════════════════════════════════════════════════════════════════
+# GATEWAY SERVICE — Configuración base (todos los ambientes)
+# ═══════════════════════════════════════════════════════════════════
+# Este archivo se carga SIEMPRE, en local y en producción.
+# Las propiedades específicas de cada ambiente van en:
+#   application-local.yaml  → desarrollo local
+#   application-prod.yaml   → Azure (futuro Sprint 8)
+# ═══════════════════════════════════════════════════════════════════
+
+spring:
+  application:
+    name: gateway-service
+
+  profiles:
+    # El perfil activo lo controla la variable de entorno.
+    # En local: --spring.profiles.active=local (Run Configuration)
+    # En Azure: variable de entorno SPRING_PROFILES_ACTIVE=prod
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.miroapp: DEBUG
+    # Muestra en logs qué ruta del gateway activó cada request.
+    # Muy útil para debuggear por qué un request no llega al servicio.
+    org.springframework.cloud.gateway: DEBUG
+    # Muestra el resultado de cada evaluación de seguridad.
+    # Útil para ver por qué un request es rechazado con 401/403.
+    org.springframework.security: DEBUG

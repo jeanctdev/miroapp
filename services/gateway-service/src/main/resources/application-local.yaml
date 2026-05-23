@@ -1,0 +1,111 @@
+# ═══════════════════════════════════════════════════════════════════
+# GATEWAY SERVICE — Configuración LOCAL
+# ═══════════════════════════════════════════════════════════════════
+jwt:
+  secret: ${JWT_SECRET:miroapp-secret-key-local-development-2026-very-long-key}
+  expiration: 86400000
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+
+          # ─────────────────────────────────────────────────────────
+          # GLOBALCORS — CORS centralizado
+          # ─────────────────────────────────────────────────────────
+          # Prefijo actualizado en Spring Cloud Gateway 4.x:
+          # ANTES: spring.cloud.gateway.globalcors
+          # AHORA: spring.cloud.gateway.server.webflux.globalcors
+          # ─────────────────────────────────────────────────────────
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOriginPatterns:
+                  - "http://localhost:3000"
+                  - "http://localhost:4200"
+                  - "http://localhost:5173"
+                  - "http://localhost:8080"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - PATCH
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders:
+                  - "*"
+                exposedHeaders:
+                  - "Authorization"
+                maxAge: 3600
+
+          # ─────────────────────────────────────────────────────────
+          # HTTPCLIENT — Timeouts
+          # ─────────────────────────────────────────────────────────
+          httpclient:
+            connect-timeout: 3000
+            response-timeout: 10s
+
+          # ─────────────────────────────────────────────────────────
+          # RUTAS
+          # ─────────────────────────────────────────────────────────
+          # Prefijo actualizado en Spring Cloud Gateway 4.x:
+          # ANTES: spring.cloud.gateway.routes
+          # AHORA: spring.cloud.gateway.server.webflux.routes
+          # ─────────────────────────────────────────────────────────
+          routes:
+
+            # RUTA 1: auth-service — Puerto 8081
+            # /api/auth/login y /api/auth/refresh son públicos
+            # El SecurityConfig define qué sub-paths son públicos
+            - id: auth-service
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/auth/**
+
+            # RUTA 2: tenant-service — Puerto 8082
+            # /api/tenants/register es público
+            # /api/tenants/me y demás requieren JWT
+            - id: tenant-service
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/tenants/**
+
+            # RUTA 3: product-service — Puerto 8083
+            # /api/products/** → catálogo de productos
+            - id: product-service-products
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/products/**
+
+            # RUTA 4: product-service — Puerto 8083
+            # /api/categories/** → categorías del catálogo
+            - id: product-service-categories
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/categories/**
+
+            # RUTA 5: inventory-service — Puerto 8084
+            # /api/stock/** → stock por sucursal
+            - id: inventory-service
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/stock/**
+
+# ─────────────────────────────────────────────────────────────────
+# ACTUATOR — Endpoints de monitoreo
+# ─────────────────────────────────────────────────────────────────
+# management.endpoint.gateway.enabled fue eliminado en esta versión.
+# Se reemplaza por management.endpoint.gateway.access
+# unrestricted = accesible sin restricciones en local
+# ─────────────────────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, gateway
+  endpoint:
+    gateway:
+      access: unrestricted
+    health:
+      show-details: always
