@@ -1,0 +1,25 @@
+# =====================================================================
+# PRODUCT SERVICE — Configuración base
+# =====================================================================
+# Este archivo contiene configuración común a TODOS los ambientes.
+# Los valores específicos de cada ambiente van en:
+#   application-local.yaml  → desarrollo local
+#   application-prod.yaml   → producción en Azure (futuro)
+# =====================================================================
+
+spring:
+  application:
+    name: product-service
+  profiles:
+    active: local
+
+server:
+  port: 8083
+
+logging:
+  level:
+    root: INFO
+    com.miroapp.product: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.flywaydb: DEBUG
