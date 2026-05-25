@@ -1,0 +1,37 @@
+# =====================================================================
+# TENANT SERVICE — Configuración local
+# =====================================================================
+
+spring:
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:miroapp}
+    username: ${POSTGRES_USER:miroapp_user}
+    password: ${POSTGRES_PASSWORD:miroapp_pass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # none → JPA no crea ni modifica tablas.
+      # tenant-service crea el schema via TenantSchemaService
+      # y Flyway ejecuta las migraciones automáticamente.
+      ddl-auto: none
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    # Flyway del schema PUBLIC — baseline de las tablas globales
+    # (tenants, plans, countries, currencies, tax_types)
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+# =====================================================================
+# JWT — mismo secret que auth-service y gateway-service
+# =====================================================================
+jwt:
+  secret: ${JWT_SECRET:miroapp-secret-key-local-development-2026-very-long-key}
+  expiration: ${JWT_EXPIRATION:86400000}
