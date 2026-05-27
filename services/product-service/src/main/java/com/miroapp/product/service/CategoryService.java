@@ -3,6 +3,8 @@ package com.miroapp.product.service;
 import com.miroapp.common.exception.BusinessException;
 import com.miroapp.common.exception.ErrorCodes;
 import com.miroapp.common.exception.ResourceNotFoundException;
+import com.miroapp.product.config.SecurityUtils;
+import com.miroapp.product.config.TenantContext;
 import com.miroapp.product.dto.*;
 import com.miroapp.product.entity.Category;
 import com.miroapp.product.repository.CategoryRepository;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 // =====================================================================
@@ -36,6 +39,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ProductRepository   productRepository;
     private final MessageSource        messageSource;
+    private final TenantContext tenantContext;
+    private final SecurityUtils securityUtils;
 
     // ── Helper para mensajes ──────────────────────────────────────
     private String getMessage(String code, Object... args) {
@@ -47,23 +52,26 @@ public class CategoryService {
     // ── Listar categorías paginadas ───────────────────────────────
     @Transactional(readOnly = true)
     public Page<CategoryResponse> findAll(Pageable pageable) {
-        return categoryRepository
-                .findAllByActiveTrue(pageable)
-                .map(this::toResponse);
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
+      return categoryRepository
+        .findAllByActiveTrue(pageable)
+        .map(this::toResponse);
     }
 
     // ── Listar categorías raíz (sin padre) ───────────────────────
     @Transactional(readOnly = true)
     public Page<CategoryResponse> findRoots(Pageable pageable) {
-        return categoryRepository
-                .findAllByParentIdIsNullAndActiveTrue(pageable)
-                .map(this::toResponse);
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
+      return categoryRepository
+        .findAllByParentIdIsNullAndActiveTrue(pageable)
+        .map(this::toResponse);
     }
 
     // ── Listar subcategorías de una categoría padre ───────────────
     @Transactional(readOnly = true)
     public Page<CategoryResponse> findByParent(
             UUID parentId, Pageable pageable) {
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
 
         // Verificar que el padre existe
         findCategoryOrThrow(parentId);
@@ -77,7 +85,9 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public Page<CategoryResponse> search(
             String name, Pageable pageable) {
-        return categoryRepository
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+      return categoryRepository
                 .findAllByNameContainingIgnoreCaseAndActiveTrue(
                         name, pageable)
                 .map(this::toResponse);
@@ -86,50 +96,51 @@ public class CategoryService {
     // ── Obtener una categoría por ID ──────────────────────────────
     @Transactional(readOnly = true)
     public CategoryResponse findById(UUID id) {
-        return toResponse(findCategoryOrThrow(id));
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
+      return toResponse(findCategoryOrThrow(id));
     }
 
     // ── Crear categoría ───────────────────────────────────────────
     @Transactional
     public CategoryResponse create(
             CreateCategoryRequest request, UUID userId) {
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
 
-        // Validar nombre duplicado
-        if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
-            throw new BusinessException(
-                    ErrorCodes.VALIDATION_ERROR,
-                    getMessage("category.name.duplicate", request.getName()),
-                    "name"
-            );
-        }
+      // Validar nombre duplicado
+      if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
+        throw new BusinessException(
+          ErrorCodes.VALIDATION_ERROR,
+          getMessage("category.name.duplicate", request.getName()),
+          "name"
+        );
+      }
 
-        // Validar que el padre existe si se envió
-        if (request.getParentId() != null) {
-            findCategoryOrThrow(request.getParentId());
-        }
+      // Validar que el padre existe si se envió
+      if (request.getParentId() != null) {
+        findCategoryOrThrow(request.getParentId());
+      }
 
-        Category category = Category.builder()
-                .name(request.getName())
-                .description(request.getDescription())
-                .parentId(request.getParentId())
-                .sortOrder(request.getSortOrder() != null
-                        ? request.getSortOrder() : (short) 0)
-                .active(true)
-                .createdBy(userId)
-                .build();
+      Category category = Category.builder()
+        .name(request.getName())
+        .description(request.getDescription())
+        .parentId(request.getParentId())
+        .sortOrder(request.getSortOrder() != null
+          ? request.getSortOrder() : (short) 0)
+        .active(true)
+        .createdBy(userId)
+        .build();
 
-        Category saved = categoryRepository.save(category);
-        log.info("Categoría creada: {} por usuario: {}", saved.getId(), userId);
-
-        return toResponse(saved);
+      Category saved = categoryRepository.save(category);
+      log.info("Categoría creada: {} por usuario: {}", saved.getId(), userId);
+      return toResponse(saved);
     }
 
     // ── Actualizar categoría ──────────────────────────────────────
     @Transactional
     public CategoryResponse update(
             UUID id, UpdateCategoryRequest request, UUID userId) {
-
-        Category category = findCategoryOrThrow(id);
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
+      Category category = findCategoryOrThrow(id);
 
         // Validar nombre duplicado solo si cambió
         if (request.getName() != null
@@ -172,6 +183,9 @@ public class CategoryService {
         if (request.getSortOrder()   != null) category.setSortOrder(request.getSortOrder());
         if (request.getActive()      != null) category.setActive(request.getActive());
 
+        //ACTUALIZAR MANUAL
+        category.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC)); // ← ZoneOffset.UTC
+
         Category updated = categoryRepository.save(category);
         log.info("Categoría actualizada: {} por usuario: {}", id, userId);
 
@@ -181,6 +195,7 @@ public class CategoryService {
     // ── Eliminar categoría (soft delete) ──────────────────────────
     @Transactional
     public void delete(UUID id, UUID userId) {
+      tenantContext.set(securityUtils.getCurrentTenantSlug());
 
         Category category = findCategoryOrThrow(id);
 
@@ -201,7 +216,7 @@ public class CategoryService {
         }
 
         // Soft delete — nunca DELETE físico
-        category.setDeletedAt(OffsetDateTime.now());
+        category.setDeletedAt(OffsetDateTime.now(ZoneOffset.UTC)); // ← ZoneOffset.UTC
         category.setActive(false);
         categoryRepository.save(category);
 

@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 // =====================================================================
@@ -348,6 +349,7 @@ public class ProductService {
             );
         }
 
+        product.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
         Product updated = productRepository.save(product);
 
         log.info("Producto actualizado: id={} por usuario={}",
@@ -365,7 +367,7 @@ public class ProductService {
         tenantContext.set(securityUtils.getCurrentTenantSlug());
         UUID userId = securityUtils.getCurrentUserId();
         Product product = findProductOrThrow(id);
-        product.setDeletedAt(OffsetDateTime.now());
+        product.setDeletedAt(OffsetDateTime.now(ZoneOffset.UTC));
         product.setActive(false);
         productRepository.save(product);
         log.info("Producto eliminado (soft): id={} por usuario={}", id, userId);

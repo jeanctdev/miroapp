@@ -6,6 +6,7 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 // =====================================================================
@@ -132,19 +133,15 @@ public class Product {
     // ── Hooks de JPA ──────────────────────────────────────────────
     @PrePersist
     protected void onCreate() {
-        OffsetDateTime now = OffsetDateTime.now();
-        this.createdAt   = now;
-        this.updatedAt   = now;
-        if (this.active      == null) this.active      = true;
-        if (this.hasVariants == null) this.hasVariants = false;
-        if (this.trackStock  == null) this.trackStock  = true;
-        if (this.basePrice   == null) this.basePrice   = BigDecimal.ZERO;
-        if (this.baseCost    == null) this.baseCost    = BigDecimal.ZERO;
-        if (this.unit        == null) this.unit        = "unidad";
+      OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+      this.createdAt   = now;
+      this.updatedAt   = now;
+      if (this.active      == null) this.active      = true;
+      if (this.hasVariants == null) this.hasVariants = false;
+      if (this.trackStock  == null) this.trackStock  = true;
+      if (this.basePrice   == null) this.basePrice   = BigDecimal.ZERO;
+      if (this.baseCost    == null) this.baseCost    = BigDecimal.ZERO;
+      if (this.unit        == null) this.unit        = "unidad";
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = OffsetDateTime.now();
-    }
 }

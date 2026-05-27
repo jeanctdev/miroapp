@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 // =====================================================================
@@ -82,15 +83,11 @@ public class Category {
     // ── Hooks de JPA ──────────────────────────────────────────────
     @PrePersist
     protected void onCreate() {
-        OffsetDateTime now = OffsetDateTime.now();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
         this.createdAt  = now;
         this.updatedAt  = now;
         if (this.active     == null) this.active     = true;
         if (this.sortOrder  == null) this.sortOrder  = 0;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = OffsetDateTime.now();
-    }
 }
