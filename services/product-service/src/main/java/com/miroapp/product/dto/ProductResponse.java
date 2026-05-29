@@ -1,6 +1,8 @@
 package com.miroapp.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.miroapp.common.serializer.MoneySerializer;
 import com.miroapp.product.entity.ProductType;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +30,9 @@ public class ProductResponse {
     private ProductType type;
     private String      sku;
     private String      barcode;
+    @JsonSerialize(using = MoneySerializer.class)
     private BigDecimal  basePrice;
+    @JsonSerialize(using = MoneySerializer.class)
     private BigDecimal  baseCost;
     private UUID        taxTypeId;
     private String      unit;

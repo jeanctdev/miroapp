@@ -12,6 +12,11 @@ spring:
     name: product-service
   profiles:
     active: local
+  jackson:
+    serialization:
+      write-bigdecimal-as-plain: true
+    deserialization:
+      fail-on-unknown-properties: false
 
 server:
   port: 8083
