@@ -1,37 +1,38 @@
 # =====================================================================
-# TENANT SERVICE — Configuración local
+# MIRO ERP — tenant-service
+# Ambiente: LOCAL
+# Descripción: Configuración para desarrollo local con Docker
 # =====================================================================
 
 spring:
 
+  # ─── BASE DE DATOS ──────────────────────────────────────────────
+  # PostgreSQL corriendo en Docker — docker-compose up -d
+  # ${VAR:default} → usa la variable de entorno
+  #                  si no existe → usa el valor por defecto
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:miroapp}
     username: ${POSTGRES_USER:miroapp_user}
     password: ${POSTGRES_PASSWORD:miroapp_pass}
     driver-class-name: org.postgresql.Driver
 
+  # ─── JPA / HIBERNATE ────────────────────────────────────────────
   jpa:
     hibernate:
-      # none → JPA no crea ni modifica tablas.
-      # tenant-service crea el schema via TenantSchemaService
-      # y Flyway ejecuta las migraciones automáticamente.
-      ddl-auto: none
-    show-sql: false
+      # validate → Hibernate solo verifica, nunca modifica la BD
+      # Flyway es el único que crea y altera tablas
+      ddl-auto: validate
+    # Solo en local → ver queries SQL en la consola
+    show-sql: true
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
 
+  # ─── FLYWAY ─────────────────────────────────────────────────────
+  # Al arrancar → lee db/migration → ejecuta scripts pendientes
+  # baseline-on-migrate → no falla si la BD ya tiene tablas
   flyway:
-    # Flyway del schema PUBLIC — baseline de las tablas globales
-    # (tenants, plans, countries, currencies, tax_types)
     enabled: true
-    baseline-on-migrate: true
     locations: classpath:db/migration
-
-# =====================================================================
-# JWT — mismo secret que auth-service y gateway-service
-# =====================================================================
-jwt:
-  secret: ${JWT_SECRET:miroapp-secret-key-local-development-2026-very-long-key}
-  expiration: ${JWT_EXPIRATION:86400000}
+    baseline-on-migrate: true

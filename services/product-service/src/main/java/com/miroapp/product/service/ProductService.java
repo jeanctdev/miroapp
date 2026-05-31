@@ -70,6 +70,7 @@ public class ProductService {
     private final TenantContext tenantContext;
     private final SecurityUtils securityUtils;
     private final MessageSource messageSource;
+    private final ProductVariantService variantService;
 
     // ── Helper para mensajes ──────────────────────────────────────
     // Convención MIRO: NUNCA strings hardcodeados.
@@ -367,6 +368,8 @@ public class ProductService {
         tenantContext.set(securityUtils.getCurrentTenantSlug());
         UUID userId = securityUtils.getCurrentUserId();
         Product product = findProductOrThrow(id);
+        // @Transactional garantiza que todo o nada se elimina
+        variantService.deleteAllByProduct(id);
         product.setDeletedAt(OffsetDateTime.now(ZoneOffset.UTC));
         product.setActive(false);
         productRepository.save(product);
@@ -433,5 +436,7 @@ public class ProductService {
                 .updatedAt(product.getUpdatedAt())
                 .build();
     }
+
+
 
 }
