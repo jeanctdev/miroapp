@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,15 @@ public interface CategoryRepository
     // Subcategorías de una categoría padre específica
     Page<Category> findAllByParentIdAndActiveTrue(
             UUID parentId, Pageable pageable);
+
+    // NUEVO: Hijos directos de un padre — sin paginar
+    // Usado por el buildTree() para construir el árbol completo
+    // Sin paginación porque necesitamos TODOS los hijos para el árbol
+    List<Category> findAllByParentIdAndActiveTrueOrderBySortOrderAsc(UUID parentId);
+
+    // NUEVO: Todas las categorías raíz sin paginar
+    // Usado por buildTree() como punto de entrada del árbol
+    List<Category> findAllByParentIdIsNullAndActiveTrueOrderBySortOrderAsc();
 
     // Búsqueda por nombre — barra de búsqueda
     Page<Category> findAllByNameContainingIgnoreCaseAndActiveTrue(

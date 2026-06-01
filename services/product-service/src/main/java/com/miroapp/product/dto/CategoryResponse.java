@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 // =====================================================================
@@ -26,10 +27,15 @@ public class CategoryResponse {
     private UUID   parentId;
 
     // Nombre del padre — evita segunda llamada al frontend
-    private String parentName;
+    private String  parentName;
+    private Short   sortOrder;
+    private Boolean active;
 
-    private Short           sortOrder;
-    private Boolean         active;
+    // Lista de categorías hijas — solo en GET /api/categories/tree
+    // NULL en todos los demás endpoints → no aparece en JSON (NON_NULL)
+    // Con valor → árbol anidado recursivo
+    private List<CategoryResponse> children;
+
     private OffsetDateTime createdAt;
     private OffsetDateTime  updatedAt;
 }

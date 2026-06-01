@@ -1,7 +1,6 @@
 package com.miroapp.product.controller;
 
 import com.miroapp.common.response.ApiResponse;
-import com.miroapp.product.config.SecurityUtils;
 import com.miroapp.product.dto.CategoryResponse;
 import com.miroapp.product.dto.CreateCategoryRequest;
 import com.miroapp.product.dto.PageResponse;
@@ -20,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 // =====================================================================
@@ -51,7 +51,6 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final SecurityUtils securityUtils;
 
     // ── GET /api/categories ───────────────────────────────────────
     // Lista todas las categorías activas paginadas.
@@ -172,10 +171,7 @@ public class CategoryController {
         // El userId viene del SecurityContext via SecurityUtils
         // El service lo extrae internamente — el controller
         // no necesita saber quién es el usuario
-        CategoryResponse response = categoryService.create(
-            request,
-            securityUtils.getCurrentUserId()
-        );
+        CategoryResponse response = categoryService.create(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -196,10 +192,7 @@ public class CategoryController {
             @Valid @RequestBody UpdateCategoryRequest request,
             HttpServletRequest httpRequest) {
 
-        CategoryResponse response = categoryService.update(
-                id, request,
-                securityUtils.getCurrentUserId()
-        );
+        CategoryResponse response = categoryService.update(id, request);
 
         return ResponseEntity.ok(
                 ApiResponse.ok(
@@ -220,7 +213,7 @@ public class CategoryController {
             @PathVariable UUID id,
             HttpServletRequest request) {
 
-        categoryService.delete(id, securityUtils.getCurrentUserId());
+        categoryService.delete(id);
 
         return ResponseEntity.ok(
                 ApiResponse.ok(
@@ -230,5 +223,24 @@ public class CategoryController {
                 )
         );
     }
+
+  // ── GET /api/categories/tree ──────────────────────────────────
+  // Devuelve el árbol completo de categorías anidadas.
+  // Una sola llamada construye el menú de navegación completo.
+  // El frontend no necesita hacer múltiples llamadas por nivel.
+  @GetMapping("/tree")
+  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER'," +
+    "'CASHIER','VIEWER')")
+  public ResponseEntity<ApiResponse<List<CategoryResponse>>> getTree(
+    HttpServletRequest request) {
+
+    return ResponseEntity.ok(
+      ApiResponse.ok(
+        categoryService.getTree(),
+        request.getRequestURI(),
+        HttpStatus.OK.value()
+      )
+    );
+  }
 
 }

@@ -20,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // =====================================================================
 // CategoryService — lógica de negocio para categorías
@@ -100,11 +102,39 @@ public class CategoryService {
       return toResponse(findCategoryOrThrow(id));
     }
 
+  // ── GET /tree — Árbol completo anidado ────────────────────────
+  // ¿Por qué un endpoint /tree y no solo /roots?
+  //   /roots devuelve solo el primer nivel → el frontend
+  //   necesita hacer N llamadas para construir el árbol completo.
+  //   /tree devuelve TODO el árbol en una sola llamada.
+  //   El frontend puede construir el menú de navegación sin más
+  //   requests. Mucho más eficiente para el POS.
+  //
+  // Algoritmo:
+  //   1. Traer todas las categorías raíz (parentId IS NULL)
+  //   2. Para cada raíz → buscar sus hijos recursivamente
+  //   3. Construir CategoryResponse con campo children lleno
+  //   4. Los nodos hoja tienen children = [] (lista vacía)
+  @Transactional(readOnly = true)
+  public List<CategoryResponse> getTree() {
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    // Traer todas las raíces ordenadas por sortOrder
+    List<Category> roots = categoryRepository
+      .findAllByParentIdIsNullAndActiveTrueOrderBySortOrderAsc();
+
+    // Para cada raíz construir el subárbol recursivamente
+    return roots.stream()
+      .map(this::buildSubTree)
+      .collect(Collectors.toList());
+  }
+
     // ── Crear categoría ───────────────────────────────────────────
     @Transactional
     public CategoryResponse create(
-            CreateCategoryRequest request, UUID userId) {
+            CreateCategoryRequest request) {
       tenantContext.set(securityUtils.getCurrentTenantSlug());
+      UUID userId = securityUtils.getCurrentUserId();
 
       // Validar nombre duplicado
       if (categoryRepository.existsByNameIgnoreCase(request.getName())) {
@@ -135,67 +165,100 @@ public class CategoryService {
       return toResponse(saved);
     }
 
-    // ── Actualizar categoría ──────────────────────────────────────
-    @Transactional
-    public CategoryResponse update(
-            UUID id, UpdateCategoryRequest request, UUID userId) {
-      tenantContext.set(securityUtils.getCurrentTenantSlug());
-      Category category = findCategoryOrThrow(id);
+  @Transactional
+  public CategoryResponse update(
+    UUID id, UpdateCategoryRequest request) {
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+    UUID userId = securityUtils.getCurrentUserId();
 
-        // Validar nombre duplicado solo si cambió
-        if (request.getName() != null
-                && !request.getName().equalsIgnoreCase(category.getName())
-                && categoryRepository.existsByNameIgnoreCase(request.getName())) {
-            throw new BusinessException(
-                    ErrorCodes.VALIDATION_ERROR,
-                    getMessage("category.name.duplicate", request.getName()),
-                    "name"
-            );
-        }
+    Category category = findCategoryOrThrow(id);
 
-        // Validar que el padre existe si se envió
-        if (request.getParentId() != null) {
-            findCategoryOrThrow(request.getParentId());
-        }
+    // VALIDACIÓN CICLOS — solo si parentId cambió
+    if (request.getParentId() != null
+      && !request.getParentId().equals(category.getParentId())) {
 
-        // Validar que no se desactive si tiene subcategorías
-        if (Boolean.FALSE.equals(request.getActive())
-                && categoryRepository.existsByParentIdAndActiveTrue(id)) {
-            throw new BusinessException(
-                    ErrorCodes.VALIDATION_ERROR,
-                    getMessage("category.has.subcategories")
-            );
-        }
+      // No puede ser su propio padre
+      if (request.getParentId().equals(id)) {
+        throw new BusinessException(
+          ErrorCodes.VALIDATION_ERROR,
+          getMessage("category.self.parent"),
+          "parentId"
+        );
+      }
 
-        // Validar que no se desactive si tiene productos activos
-        if (Boolean.FALSE.equals(request.getActive())
-                && productRepository.existsByCategoryIdAndActiveTrue(id)) {
-            throw new BusinessException(
-                    ErrorCodes.VALIDATION_ERROR,
-                    getMessage("category.has.products")
-            );
-        }
+      // Verificar que el nuevo padre existe
+      findCategoryOrThrow(request.getParentId());
 
-        // Aplicar cambios solo si vienen en el request
-        if (request.getName()        != null) category.setName(request.getName());
-        if (request.getDescription() != null) category.setDescription(request.getDescription());
-        if (request.getParentId()    != null) category.setParentId(request.getParentId());
-        if (request.getSortOrder()   != null) category.setSortOrder(request.getSortOrder());
-        if (request.getActive()      != null) category.setActive(request.getActive());
+      // Verificar que no crea un ciclo
+      if (isDescendant(id, request.getParentId())) {
+        throw new BusinessException(
+          ErrorCodes.VALIDATION_ERROR,
+          getMessage("category.cycle.detected"),
+          "parentId"
+        );
+      }
 
-        //ACTUALIZAR MANUAL
-        category.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC)); // ← ZoneOffset.UTC
-
-        Category updated = categoryRepository.save(category);
-        log.info("Categoría actualizada: {} por usuario: {}", id, userId);
-
-        return toResponse(updated);
+      category.setParentId(request.getParentId());
     }
+
+    // VALIDACIÓN NOMBRE DUPLICADO — solo si cambió
+    if (request.getName() != null
+      && !request.getName().equalsIgnoreCase(category.getName())
+      && categoryRepository.existsByNameIgnoreCase(
+      request.getName())) {
+      throw new BusinessException(
+        ErrorCodes.VALIDATION_ERROR,
+        getMessage("category.name.duplicate",
+          request.getName()),
+        "name"
+      );
+    }
+
+    // VALIDACIÓN DESACTIVAR — solo si se intenta poner active=false
+    if (Boolean.FALSE.equals(request.getActive())) {
+      if (categoryRepository.existsByParentIdAndActiveTrue(id)) {
+        throw new BusinessException(
+          ErrorCodes.VALIDATION_ERROR,
+          getMessage("category.has.children"),
+          "active"
+        );
+      }
+      if (productRepository.existsByCategoryIdAndActiveTrue(id)) {
+        throw new BusinessException(
+          ErrorCodes.VALIDATION_ERROR,
+          getMessage("category.has.products"),
+          "active"
+        );
+      }
+    }
+
+    // APLICAR CAMBIOS — solo los campos que vienen en el request
+    if (request.getName()        != null)
+      category.setName(request.getName().trim());
+    if (request.getDescription() != null)
+      category.setDescription(request.getDescription().trim());
+    if (request.getSortOrder()   != null)
+      category.setSortOrder(request.getSortOrder());
+    if (request.getActive()      != null)
+      category.setActive(request.getActive());
+
+    // parentId ya fue aplicado arriba en el bloque de ciclos
+    // NO repetir aquí
+
+    category.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
+    Category updated = categoryRepository.save(category);
+
+    log.info("Categoria actualizada: id={} por usuario={}",
+      id, userId);
+
+    return toResponse(updated);
+  }
 
     // ── Eliminar categoría (soft delete) ──────────────────────────
     @Transactional
-    public void delete(UUID id, UUID userId) {
+    public void delete(UUID id) {
       tenantContext.set(securityUtils.getCurrentTenantSlug());
+      UUID userId = securityUtils.getCurrentUserId();
 
         Category category = findCategoryOrThrow(id);
 
@@ -255,4 +318,90 @@ public class CategoryService {
                 .updatedAt(category.getUpdatedAt())
                 .build();
     }
+
+  // ── Helper: construir subárbol recursivo ──────────────────────
+  // Recibe una categoría y devuelve su CategoryResponse
+  // con todos sus hijos anidados recursivamente.
+  //
+  // Ejemplo de resultado para "Alimentos":
+  //   CategoryResponse {
+  //     id: "9c2c...",
+  //     name: "Alimentos",
+  //     children: [
+  //       CategoryResponse {
+  //         id: "b069...",
+  //         name: "Alimento Seco",
+  //         children: []  ← nodo hoja
+  //       },
+  //       CategoryResponse {
+  //         id: "9b10...",
+  //         name: "Alimento Humedo",
+  //         children: []
+  //       }
+  //     ]
+  //   }
+  private CategoryResponse buildSubTree(Category category) {
+    // Buscar todos los hijos directos ordenados por sortOrder
+    List<Category> children = categoryRepository
+      .findAllByParentIdAndActiveTrueOrderBySortOrderAsc(
+        category.getId());
+
+    // Para cada hijo → construir su subárbol recursivamente
+    List<CategoryResponse> childResponses = children.stream()
+      .map(this::buildSubTree)
+      .collect(Collectors.toList());
+
+    // Construir la respuesta con los hijos anidados
+    return CategoryResponse.builder()
+      .id(category.getId())
+      .parentId(category.getParentId())
+      .name(category.getName())
+      .description(category.getDescription())
+      .sortOrder(category.getSortOrder())
+      .active(category.getActive())
+      .createdAt(category.getCreatedAt())
+      .updatedAt(category.getUpdatedAt())
+      .children(childResponses)
+      .build();
+  }
+
+  // ── Helper: detectar ciclos en el árbol ───────────────────────
+  // Verifica si `potentialDescendantId` es un descendiente de
+  // `ancestorId` para evitar ciclos al cambiar el parentId.
+  //
+  // ¿Por qué es necesario?
+  //   Sin esta validación podría ocurrir:
+  //     Alimentos (raíz)
+  //       └── Alimento Seco (hijo)
+  //
+  //   Si intentamos poner Alimentos como hijo de Alimento Seco:
+  //     Alimento Seco ← intenta ser padre de Alimentos
+  //       └── Alimentos ← intenta ser padre de Alimento Seco
+  //   Esto crea un ciclo infinito → el árbol se destruye
+  //
+  // Algoritmo: recorre hacia ABAJO desde ancestorId
+  //   Si en algún nivel encuentra potentialDescendantId → hay ciclo
+  //   Si llega a nodos hoja sin encontrarlo → no hay ciclo
+  private boolean isDescendant(UUID ancestorId,
+                               UUID potentialDescendantId) {
+    // Buscar todos los hijos directos del ancestro
+    List<Category> children = categoryRepository
+      .findAllByParentIdAndActiveTrueOrderBySortOrderAsc(
+        ancestorId);
+
+    for (Category child : children) {
+      // Si el hijo ES el potencial descendiente → es ciclo
+      if (child.getId().equals(potentialDescendantId)) {
+        return true;
+      }
+      // Buscar recursivamente en los hijos del hijo
+      if (isDescendant(child.getId(),
+        potentialDescendantId)) {
+        return true;
+      }
+    }
+
+    // No encontró ciclo en ningún nivel
+    return false;
+  }
 }
