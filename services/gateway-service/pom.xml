@@ -10,7 +10,7 @@
 	</parent>
     <groupId>com.miroapp</groupId>
     <artifactId>gateway-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>gateway-service</name>
     <description>API Gateway - Punto de entrada unico del sistema MIRO ERP. Puerto 8080.</description>
 

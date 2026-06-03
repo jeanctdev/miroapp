@@ -1,0 +1,35 @@
+# =====================================================================
+# MIRO ERP — inventory-service
+# Ambiente: LOCAL
+# =====================================================================
+spring:
+
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:miroapp}
+    username: ${POSTGRES_USER:miroapp_user}
+    password: ${POSTGRES_PASSWORD:miroapp_pass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # none → inventory-service NO crea ni modifica tablas
+      # Las tablas ya existen — creadas por tenant-service via Flyway V1
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    # false → inventory-service NO ejecuta migraciones
+    # tenant-service es el único dueño de las migraciones
+    enabled: false
+
+# =====================================================================
+# JWT — mismo secret que los demás servicios
+# DEBE ser idéntico en todos los servicios
+# =====================================================================
+jwt:
+  secret: ${JWT_SECRET:miroapp-secret-key-local-development-2026-very-long-key}
+  expiration: ${JWT_EXPIRATION:86400000}

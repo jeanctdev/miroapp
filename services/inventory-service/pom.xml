@@ -8,17 +8,23 @@
 		<version>3.5.14</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
     <groupId>com.miroapp</groupId>
-    <artifactId>auth-service</artifactId>
+    <artifactId>inventory-service</artifactId>
     <version>1.0.0</version>
-    <name>auth-service</name>
-    <description>Miro ERP — Servicio de autenticación y gestión de usuarios</description>
+    <name>inventory-service</name>
+    <description>
+        Miro ERP — Gestión de stock e inventario por sucursal y tenant.
+    </description>
 
-    <properties>
+	<properties>
 		<java.version>21</java.version>
 	</properties>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -54,28 +60,18 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-
-        <!-- JDBC Template — para ejecutar SET search_path dinámicamente -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
         <!-- common-lib — ApiResponse, GlobalExceptionHandler -->
         <dependency>
             <groupId>com.miroapp</groupId>
             <artifactId>common-lib</artifactId>
             <version>1.0.0</version>
         </dependency>
-
         <!-- security-lib — JwtUtil, JwtAuthenticationFilter -->
         <dependency>
             <groupId>com.miroapp</groupId>
             <artifactId>security-lib</artifactId>
             <version>1.0.0</version>
         </dependency>
-
-        <!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

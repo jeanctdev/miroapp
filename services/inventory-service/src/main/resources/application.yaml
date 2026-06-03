@@ -1,0 +1,22 @@
+# =====================================================================
+# MIRO ERP — inventory-service
+# Descripción: Gestión de stock e inventario por sucursal
+# =====================================================================
+spring:
+  application:
+    name: inventory-service
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+  jackson:
+    serialization:
+      write-bigdecimal-as-plain: true
+    deserialization:
+      fail-on-unknown-properties: false
+
+server:
+  port: 8084
+
+logging:
+  level:
+    com.miroapp: DEBUG
+    org.springframework.security: DEBUG
