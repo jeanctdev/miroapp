@@ -25,6 +25,30 @@
 SET search_path TO venedog;
 
 -- =====================================================================
+-- PASO 0: SUCURSAL PRINCIPAL
+-- =====================================================================
+-- UUID fijo para reproducibilidad entre entornos.
+-- Mismo UUID insertado manualmente en el fix de venedog.
+-- Usado como {{branch_id}} en las pruebas Postman.
+-- =====================================================================
+INSERT INTO branches (
+    id,
+    name,
+    is_main,
+    active,
+    created_at,
+    updated_at
+)
+VALUES (
+    'f47ac10b-58cc-4372-a567-0e02b2c3d479',
+    'Sede Principal',
+    true,
+    true,
+    NOW(),
+    NOW()
+);
+
+-- =====================================================================
 -- PASO 1: CATEGORIAS RAIZ
 -- =====================================================================
 

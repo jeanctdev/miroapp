@@ -2,7 +2,6 @@ package com.miroapp.inventory.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -43,7 +42,6 @@ import java.util.UUID;
 // =====================================================================
 @Entity
 @Table(name = "stock")
-@SQLRestriction("deleted_at IS NULL")
 @Getter
 @Setter
 @Builder
@@ -108,10 +106,6 @@ public class Stock {
   // Primer ingreso de stock o configuración inicial
   @Column(name = "created_by")
   private UUID createdBy;
-
-  // Soft delete — un registro inactivo no aparece en el POS
-  @Column(name = "deleted_at")
-  private OffsetDateTime deletedAt;
 
   // ── @PrePersist ───────────────────────────────────────────────
   // Se ejecuta antes del INSERT en BD
