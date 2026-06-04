@@ -86,4 +86,46 @@ public class TenantSchemaService {
       throw new SchemaCreationException(slug, "migraciones Flyway", e);
     }
   }
+
+  public void createMainBranch(String slug) {
+    log.info("Creando sucursal principal para tenant: {}",
+      slug);
+
+    String sql = """
+        INSERT INTO branches (
+            id,
+            name,
+            is_main,
+            active,
+            created_at,
+            updated_at
+        ) VALUES (
+            gen_random_uuid(),
+            'Sede Principal',
+            true,
+            true,
+            NOW(),
+            NOW()
+        )
+        """;
+
+    try (var connection = dataSource.getConnection()) {
+      // Apuntar al schema del tenant
+      connection.createStatement().execute(
+        String.format(
+          "SET search_path TO \"%s\"", slug));
+
+      try (var stmt = connection.prepareStatement(sql)) {
+        stmt.executeUpdate();
+      }
+
+      log.info("Sucursal principal creada exitosamente para: {}", slug);
+
+    } catch (SQLException e) {
+      log.error("Error creando sucursal principal " +
+          "para '{}': {}", slug, e.getMessage());
+      throw new SchemaCreationException(
+        slug, "creacion de sucursal principal", e);
+    }
+  }
 }

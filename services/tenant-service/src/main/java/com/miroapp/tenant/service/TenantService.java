@@ -105,6 +105,9 @@ public class TenantService {
     // ── CREAR SCHEMA DEL TENANT ───────────────────────────────
     tenantSchemaService.createTenantSchema(savedTenant.getSlug());
 
+    //// ── CREAR SUCURSAL PRINCIPAL ──────────────────────────────
+    tenantSchemaService.createMainBranch(savedTenant.getSlug());
+
     // ── CREAR TENANT_ADMIN ────────────────────────────────────
     // Retorna la contraseña temporal en texto plano
     // Es la ÚNICA vez que sale del sistema
