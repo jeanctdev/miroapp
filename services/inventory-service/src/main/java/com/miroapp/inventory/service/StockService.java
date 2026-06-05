@@ -5,11 +5,7 @@ import com.miroapp.common.exception.ErrorCodes;
 import com.miroapp.common.exception.ResourceNotFoundException;
 import com.miroapp.inventory.config.SecurityUtils;
 import com.miroapp.inventory.config.TenantContext;
-import com.miroapp.inventory.dto.PageResponse;
-import com.miroapp.inventory.dto.StockAdjustmentRequest;
-import com.miroapp.inventory.dto.StockMovementResponse;
-import com.miroapp.inventory.dto.StockResponse;
-import com.miroapp.inventory.dto.StockTransferRequest;
+import com.miroapp.inventory.dto.*;
 import com.miroapp.inventory.entity.MovementReason;
 import com.miroapp.inventory.entity.MovementType;
 import com.miroapp.inventory.entity.Stock;
@@ -145,6 +141,131 @@ public class StockService {
 
     return movementRepository
       .findAllByProductIdOrderByCreatedAtDesc(productId, pageable)
+      .map(this::toMovementResponse);
+  }
+
+  // ── GET stock por ID ──────────────────────────────────────────
+  // El frontend necesita el stockId para llamar a PUT /config.
+  // Sin este endpoint no puede obtener el ID del registro.
+  @Transactional(readOnly = true)
+  public StockResponse findById(UUID stockId) {
+
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    Stock stock = stockRepository
+      .findById(stockId)
+      .orElseThrow(() ->
+        new ResourceNotFoundException(
+          getMessage("stock.config.not.found", stockId)));
+
+    return toResponse(stock);
+  }
+
+  // ── PUT config — min_quantity y max_quantity ──────────────────
+  // Configura los niveles de alerta de un registro de stock.
+  // No genera StockMovement — es solo configuración.
+  // Solo actualiza los campos que vienen en el request.
+  @Transactional
+  public StockResponse updateStockConfig(UUID stockId, StockConfigRequest request) {
+
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    Stock stock = stockRepository.findById(stockId)
+      .orElseThrow(() ->
+        new ResourceNotFoundException(
+          getMessage(
+            "stock.config.not.found",
+            stockId)));
+
+    // VALIDACIÓN — maxQuantity >= minQuantity
+    // Solo si ambos campos vienen en el request
+    // y ambos tienen valor (no null)
+    BigDecimal newMin = request.getMinQuantity() != null
+      ? request.getMinQuantity()
+      : stock.getMinQuantity();
+
+    BigDecimal newMax = request.getMaxQuantity() != null
+      ? request.getMaxQuantity()
+      : stock.getMaxQuantity();
+
+    if (newMax != null && newMax.compareTo(newMin) < 0) {
+      throw new BusinessException(ErrorCodes.VALIDATION_ERROR,
+        getMessage("stock.max.less.than.min"),
+        "maxQuantity");
+    }
+
+    // Aplicar solo los campos enviados
+    // Patch-like behavior
+    if (request.getMinQuantity() != null)
+      stock.setMinQuantity(request.getMinQuantity());
+
+    // maxQuantity puede llegar como null explícito
+    // para quitar el límite → lo aceptamos
+    if (request.getMaxQuantity() != null)
+      stock.setMaxQuantity(request.getMaxQuantity());
+
+    stock.setLastUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
+
+    Stock updated = stockRepository.save(stock);
+
+    log.info("Config stock actualizada: stockId={} min={} max={}",
+      stockId,
+      stock.getMinQuantity(),
+      stock.getMaxQuantity());
+
+    return toResponse(updated);
+  }
+
+  // ── GET historial por variante ────────────────────────────────
+  // Mismo patrón que findMovementsByProduct()
+  // pero filtrando por variantId.
+  // El repository ya tiene este método.
+  @Transactional(readOnly = true)
+  public Page<StockMovementResponse> findMovementsByVariant(
+    UUID variantId, Pageable pageable) {
+
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    return movementRepository
+      .findAllByVariantIdOrderByCreatedAtDesc(
+        variantId, pageable)
+      .map(this::toMovementResponse);
+  }
+
+  // ── GET historial filtrado por tipo ──────────────────────────
+  // Ver solo entradas (IN) o solo salidas (OUT).
+  // Útil para reportes:
+  //   "¿Cuánto entró a la sucursal este mes?"
+  //   WHERE type = 'IN' AND branch_id = ?
+  @Transactional(readOnly = true)
+  public Page<StockMovementResponse> findMovementsByType(
+    UUID branchId,
+    MovementType type,
+    Pageable pageable) {
+
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    return movementRepository
+      .findAllByBranchIdAndTypeOrderByCreatedAtDesc(branchId, type, pageable)
+      .map(this::toMovementResponse);
+  }
+
+  // ── GET historial filtrado por razón ─────────────────────────
+  // Ver movimientos de un motivo específico.
+  // Útil para análisis:
+  //   "¿Cuántas compras hice este mes?"
+  //   WHERE reason = 'PURCHASE' AND branch_id = ?
+  @Transactional(readOnly = true)
+  public Page<StockMovementResponse> findMovementsByReason(
+    UUID branchId,
+    MovementReason reason,
+    Pageable pageable) {
+
+    tenantContext.set(securityUtils.getCurrentTenantSlug());
+
+    return movementRepository
+      .findAllByBranchIdAndReasonOrderByCreatedAtDesc(
+        branchId, reason, pageable)
       .map(this::toMovementResponse);
   }
 

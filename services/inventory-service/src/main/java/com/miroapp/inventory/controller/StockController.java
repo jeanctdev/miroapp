@@ -15,6 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import com.miroapp.inventory.dto.StockConfigRequest;
+import com.miroapp.inventory.entity.MovementReason;
+import com.miroapp.inventory.entity.MovementType;
 
 import java.util.UUID;
 
@@ -205,22 +208,36 @@ public class StockController {
         HttpStatus.CREATED.value()));
   }
 
-  // ── GET /api/stock/movements?branchId=uuid ────────────────────
-  // Historial completo de movimientos de una sucursal.
-  // Ordenado por createdAt DESC — más reciente primero.
-  // Para auditoría del inventario en el backoffice.
-  // CASHIER no tiene acceso — es información sensible.
+  // ── GET /api/stock/movements ──────────────────────────────────
+  // Historial con filtros opcionales.
+  // Sin filtros    → todos los movimientos de la sucursal
+  // ?type=IN       → solo entradas
+  // ?type=OUT      → solo salidas
+  // ?reason=SALE   → solo ventas
+  // ?reason=PURCHASE → solo compras
+  //
+  // Solo UN filtro a la vez — type tiene prioridad sobre reason.
+  // Si ambos vienen → se usa type.
   @GetMapping("/movements")
-  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER'," +
-    "'VIEWER')")
+  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER','VIEWER')")
   public ResponseEntity<ApiResponse<PageResponse<StockMovementResponse>>>
   findMovements(
     @RequestParam UUID branchId,
+    @RequestParam(required = false) MovementType type,
+    @RequestParam(required = false) MovementReason reason,
     @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
     HttpServletRequest request) {
 
-    Page<StockMovementResponse> page =
-      stockService.findMovements(branchId, pageable);
+    Page<StockMovementResponse> page;
+
+    // según los filtros recibidos
+    if (type != null) {
+      page = stockService.findMovementsByType(branchId, type, pageable);
+    } else if (reason != null) {
+      page = stockService.findMovementsByReason(branchId, reason, pageable);
+    } else {
+      page = stockService.findMovements(branchId, pageable);
+    }
 
     return ResponseEntity.ok(
       ApiResponse.ok(
@@ -228,6 +245,7 @@ public class StockController {
         request.getRequestURI(),
         HttpStatus.OK.value()));
   }
+
 
   // ── GET /api/stock/movements/product/{productId} ──────────────
   // Historial de movimientos de un producto específico.
@@ -257,5 +275,58 @@ public class StockController {
         HttpStatus.OK.value()));
   }
 
+  // ── GET /api/stock/{stockId} ──────────────────────────────────
+  // Obtiene un registro de stock por su UUID.
+  // El frontend necesita el stockId para llamar
+  // al endpoint de configuración PUT /config.
+  @GetMapping("/{stockId}")
+  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER','CASHIER','VIEWER')")
+  public ResponseEntity<ApiResponse<StockResponse>>
+  findById(@PathVariable UUID stockId, HttpServletRequest request) {
+
+    return ResponseEntity.ok(ApiResponse.ok(
+      stockService.findById(stockId),
+      request.getRequestURI(),
+      HttpStatus.OK.value()));
+  }
+
+  // ── PUT /api/stock/{stockId}/config ───────────────────────────
+  // Configura min_quantity y max_quantity de un registro.
+  // No genera StockMovement — es solo configuración.
+  // Solo TENANT_ADMIN y MANAGER pueden configurar alertas.
+  @PutMapping("/{stockId}/config")
+  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER')")
+  public ResponseEntity<ApiResponse<StockResponse>> updateConfig(
+    @PathVariable UUID stockId,
+    @Valid @RequestBody StockConfigRequest request,
+    HttpServletRequest httpRequest) {
+
+    return ResponseEntity.ok(
+      ApiResponse.ok(
+        stockService.updateStockConfig(
+          stockId, request),
+        httpRequest.getRequestURI(),
+        HttpStatus.OK.value()));
+  }
+
+  // ── GET /api/stock/movements/variant/{variantId} ──────────────
+  // Historial de movimientos de una variante específica.
+  @GetMapping("/movements/variant/{variantId}")
+  @PreAuthorize("hasAnyRole('TENANT_ADMIN','MANAGER','VIEWER')")
+  public ResponseEntity<ApiResponse<PageResponse<StockMovementResponse>>>
+  findMovementsByVariant(
+    @PathVariable UUID variantId,
+    @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+    Pageable pageable,
+    HttpServletRequest request) {
+
+    return ResponseEntity.ok(
+      ApiResponse.ok(
+        new PageResponse<>(
+          stockService.findMovementsByVariant(
+            variantId, pageable)),
+        request.getRequestURI(),
+        HttpStatus.OK.value()));
+  }
 
 }
