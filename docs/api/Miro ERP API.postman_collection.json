@@ -1,0 +1,4304 @@
+{
+  "info": {
+    "_postman_id": "fc2ddb73-0f90-4575-880e-d9fe3cd91567",
+    "name": "Miro ERP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13513698"
+  },
+  "item": [
+    {
+      "name": "Tenant Service",
+      "item": [
+        {
+          "name": "POST Register Tenant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"slug\": \"venedog\",\r\n    \"name\": \"Venedog SAC\",\r\n    \"countryCode\": \"PE\",\r\n    \"currencyCode\": \"PEN\",\r\n    \"planId\": \"{{plan_starter_id}}\",\r\n    \"adminEmail\": \"admin@venedog.com\",\r\n    \"adminName\": \"Juan Pérez\",\r\n    \"adminPhone\": \"+51 999 999 999\",\r\n    \"taxInfo\": {\r\n        \"type\": \"RUC\",\r\n        \"number\": \"20123456789\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Tenant by Slug",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/venedog",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "venedog"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Register Tenant - Slug Duplicado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"slug\": \"venedog\",\r\n    \"name\": \"Venedog SAC\",\r\n    \"countryCode\": \"PE\",\r\n    \"currencyCode\": \"PEN\",\r\n    \"planId\": \"{{plan_starter_id}}\",\r\n    \"adminEmail\": \"otro@venedog.com\",\r\n    \"adminName\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Register Tenant - Email Duplicado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"slug\": \"venedog2\",\r\n    \"name\": \"Venedog SAC 2\",\r\n    \"countryCode\": \"PE\",\r\n    \"currencyCode\": \"PEN\",\r\n    \"planId\": \"{{plan_starter_id}}\",\r\n    \"adminEmail\": \"admin@venedog.com\",\r\n    \"adminName\": \"Juan Pérez\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Register Tenant - Campos Vacíos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"slug\": \"\",\r\n    \"name\": \"\",\r\n    \"countryCode\": \"PE\",\r\n    \"currencyCode\": \"PEN\",\r\n    \"planId\": \"{{plan_starter_id}}\",\r\n    \"adminEmail\": \"\",\r\n    \"adminName\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Register Tenant - Email Inválido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"slug\": \"farmacia-central\",\r\n    \"name\": \"Farmacia Central\",\r\n    \"countryCode\": \"PE\",\r\n    \"currencyCode\": \"PEN\",\r\n    \"planId\": \"{{plan_starter_id}}\",\r\n    \"adminEmail\": \"esto-no-es-un-email\",\r\n    \"adminName\": \"Pedro García\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/register",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Tenant by Slug - No Encontrado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/tenants/noexiste",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "tenants",
+                "noexiste"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "POST Login - Admin Venedog",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    const response = pm.response.json();\r",
+                  "    if (response.data && response.data.token) {\r",
+                  "        pm.environment.set(\"jwt_token\", response.data.token);\r",
+                  "        console.log(\"✅ JWT guardado en jwt_token\");\r",
+                  "    }\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@venedog.com\",\r\n    \"password\": \"MiroApp2026#\",\r\n    \"tenantSlug\": \"venedog\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"currentPassword\": \"{{temp_password}}\",\r\n    \"newPassword\": \"MiroApp2026#\",\r\n    \"confirmPassword\": \"MiroApp2026#\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/auth/change-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Create User - Cashier",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"cajero@venedog.com\",\r\n    \"firstName\": \"Carlos\",\r\n    \"lastName\": \"García\",\r\n    \"phone\": \"+51 988 888 888\",\r\n    \"role\": \"TENANT_ADMIN\",\r\n    \"branchId\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/auth/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "auth",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Login - Credenciales Incorrectas",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@venedog.com\",\r\n    \"password\": \"password_incorrecto\",\r\n    \"tenantSlug\": \"venedog\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "categories",
+          "item": [
+            {
+              "name": "Crear Categoría Raíz",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"category_id\", r.data.id);\r",
+                      "        console.log(\"✅ category_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Servicios\",\r\n    \"description\": \"Servicios veterinarios\",\r\n    \"parentId\": null,\r\n    \"sortOrder\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Crear Subcategoría",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Vacunacion\",\r\n    \"description\": \"Vacunas y plan de inmunizacion\",\r\n    \"parentId\": \"a09930da-7d11-49e6-8016-fe7dd7c2e486\",\r\n    \"sortOrder\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Listar Categorías",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET /tree",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/tree",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "tree"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 56 — ❌ Categoría como su propio padre",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"parentId\": \"9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 57 — ❌ Ciclo: padre intenta ser hijo de su propio hijo",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"parentId\": \"b0690641-feb9-4cb9-b25a-6b92c35ae06f\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 61 — ❌ Desactivar categoría con hijos activos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"active\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/adfb3a61-7e44-4d95-a7dc-0d99b5d88d23",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "adfb3a61-7e44-4d95-a7dc-0d99b5d88d23"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 62 — ❌ Desactivar categoría con productos activos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"active\": false\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/77f73184-ea51-4682-a5e0-ae82fc7cb4e3",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "77f73184-ea51-4682-a5e0-ae82fc7cb4e3"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Categorías Raíz",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/roots?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "roots"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Subcategorías de Medicamentos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/{{category_id}}/children?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "{{category_id}}",
+                    "children"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Categoría por ID",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/{{category_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "{{category_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Buscar categoría por nombre",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/search?name=Anti&page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Anti"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT Actualizar Categoría",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Servicios Veterinarios\",\r\n    \"description\": \"Servicios medicos y esteticos para mascotas\",\r\n    \"sortOrder\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/a09930da-7d11-49e6-8016-fe7dd7c2e486",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "a09930da-7d11-49e6-8016-fe7dd7c2e486"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Nombre Duplicado",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Alimentos\",\r\n    \"description\": \"Duplicado intencional\",\r\n    \"parentId\": null\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Nombre Vacío",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"\",\r\n    \"parentId\": null\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ DELETE Categoría con subcategorías",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/adfb3a61-7e44-4d95-a7dc-0d99b5d88d23",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "adfb3a61-7e44-4d95-a7dc-0d99b5d88d23"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 60 — ✅ Eliminar categoría hoja sin productos",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/1083bf06-8058-47b1-bc57-73b3a6138333",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "1083bf06-8058-47b1-bc57-73b3a6138333"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 58 — ❌ Eliminar categoría con hijos activos",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/389531e5-9514-4a08-9926-1eb93334739e",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "389531e5-9514-4a08-9926-1eb93334739e"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 59 — ❌ Eliminar categoría con productos activos",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "9c2c5d8a-15cd-43ed-ad02-bd6630d0ee05"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ DELETE Categoría",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/6a8352dd-fa2f-4d15-ab76-ac9fc9df83e7",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "6a8352dd-fa2f-4d15-ab76-ac9fc9df83e7"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ DELETE Categoría con productos activos",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/categories/a09930da-7d11-49e6-8016-fe7dd7c2e486",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "categories",
+                    "a09930da-7d11-49e6-8016-fe7dd7c2e486"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Product",
+          "item": [
+            {
+              "name": "POST Crear Producto PHYSICAL",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"categoryId\": \"6cf4fce0-d817-4079-88a7-e780f4d28a6d\",\r\n    \"name\": \"Pelota Kong Classic Talla M\",\r\n    \"description\": \"Juguete interactivo resistente para perros medianos\",\r\n    \"type\": \"PHYSICAL\",\r\n    \"sku\": \"JUG-KONG-CL-M\",\r\n    \"barcode\": \"3500940012345\",\r\n    \"basePrice\": 45.00,\r\n    \"baseCost\": 30.00,\r\n    \"unit\": \"unidad\",\r\n    \"hasVariants\": false,\r\n    \"trackStock\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ POST SKU Duplicado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Otro collar\",\r\n    \"type\": \"PHYSICAL\",\r\n    \"sku\": \"ACC-COL-001\",\r\n    \"basePrice\": 20.00,\r\n    \"baseCost\": 10.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ POST Sin Nombre",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"\",\r\n    \"type\": \"PHYSICAL\",\r\n    \"basePrice\": 20.00,\r\n    \"baseCost\": 10.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ POST Sin Tipo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Producto sin tipo\",\r\n    \"basePrice\": 20.00,\r\n    \"baseCost\": 10.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ POST Precio Negativo",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Producto precio negativo\",\r\n    \"type\": \"PHYSICAL\",\r\n    \"basePrice\": -5.00,\r\n    \"baseCost\": 10.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ GET SKU Inexistente",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"product_id\", r.data.id);\r",
+                      "        console.log(\"✅ product_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Producto sin tipo\",\r\n    \"basePrice\": 20.00,\r\n    \"baseCost\": 10.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/sku/SKU-NO-EXISTE",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "sku",
+                    "SKU-NO-EXISTE"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE Producto (soft delete)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/{{product_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "{{product_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Producto eliminado por ID",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/{{product_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "{{product_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear Producto SERVICE",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"categoryId\": \"4d8e2d5d-b95e-411a-8777-b5c371c11e7b\",\r\n    \"name\": \"Vacuna Antirrabica\",\r\n    \"description\": \"Vacunacion antirrabica obligatoria para perros y gatos\",\r\n    \"type\": \"SERVICE\",\r\n    \"sku\": \"SRV-VAC-RAB\",\r\n    \"basePrice\": 45.00,\r\n    \"baseCost\": 20.00,\r\n    \"unit\": \"dosis\",\r\n    \"hasVariants\": false,\r\n    \"trackStock\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear Producto DIGITAL",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"categoryId\": null,\r\n    \"name\": \"Plan de Nutricion Digital\",\r\n    \"description\": \"Plan nutricional personalizado en PDF\",\r\n    \"type\": \"DIGITAL\",\r\n    \"sku\": \"DIGI-NUT-001\",\r\n    \"basePrice\": 45.00,\r\n    \"baseCost\": 0.00,\r\n    \"unit\": \"archivo\",\r\n    \"hasVariants\": false,\r\n    \"trackStock\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT Actualizar Producto",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Collar Nylon Ajustable\",\r\n    \"sku\": \"ACC-COL-NYL\",\r\n    \"barcode\": \"\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Listar Productos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Filtrar por tipo PHYSICAL",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products?type=PHYSICAL&page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "PHYSICAL"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Filtrar por tipo SERVICE",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products?type=SERVICE&page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products"
+                  ],
+                  "query": [
+                    {
+                      "key": "type",
+                      "value": "SERVICE"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Buscar por nombre",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/search?name=royal&page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "royal"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Buscar nombre + categoría",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/search?name=collar&categoryId=7a27db49-6ef0-41fd-af6f-88e457e23cf9&page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "collar"
+                    },
+                    {
+                      "key": "categoryId",
+                      "value": "7a27db49-6ef0-41fd-af6f-88e457e23cf9"
+                    },
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Producto por SKU",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/sku/ACC-COL-001",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "sku",
+                    "ACC-COL-001"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Producto por Barcode",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/barcode/7750112345678",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "barcode",
+                    "7750112345678"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Producto por ID",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/{{product_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "{{product_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE producto padre (soft delete en cascada)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "variantes",
+          "item": [
+            {
+              "name": "❌ Crear variante en producto SERVICE",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Variante invalida\",\r\n    \"sku\": \"TEST-001\",\r\n    \"price\": 50.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/886412ef-c206-4222-909b-06f852c9cdc6/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "886412ef-c206-4222-909b-06f852c9cdc6",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ Crear variante en producto sin hasVariants=true",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Variante invalida\",\r\n    \"sku\": \"TEST-002\",\r\n    \"price\": 50.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/b99c42fa-4c8a-47ab-bee6-a3ff41f30fee/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "b99c42fa-4c8a-47ab-bee6-a3ff41f30fee",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear variante Talla S",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"variant_id\", r.data.id);\r",
+                      "        console.log(\"✅ variant_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Talla S\",\r\n    \"sku\": \"ACC-COL-NYL-S\",\r\n    \"barcode\": \"7750112000010\",\r\n    \"price\": null,\r\n    \"cost\": null,\r\n    \"attributes\": \"{\\\"talla\\\": \\\"S\\\"}\",\r\n    \"sortOrder\": 1\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "PUT Actualizar precio variante Talla S",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"price\": 22.00,\r\n    \"cost\": 12.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants/1e7d0ec0-971a-4845-9e89-3d89753b38b5",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants",
+                    "1e7d0ec0-971a-4845-9e89-3d89753b38b5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE Variante Talla S (soft delete)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"price\": 22.00,\r\n    \"cost\": 12.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants/1e7d0ec0-971a-4845-9e89-3d89753b38b5",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants",
+                    "1e7d0ec0-971a-4845-9e89-3d89753b38b5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Variantes del producto eliminado",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"price\": 22.00,\r\n    \"cost\": 12.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear variante Talla M",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"variant_id\", r.data.id);\r",
+                      "        console.log(\"✅ variant_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Talla M\",\r\n    \"sku\": \"ACC-COL-NYL-M\",\r\n    \"barcode\": \"7750112000011\",\r\n    \"attributes\": \"{\\\"talla\\\": \\\"M\\\"}\",\r\n    \"sortOrder\": 2\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear variante Talla L",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"variant_id\", r.data.id);\r",
+                      "        console.log(\"✅ variant_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Talla L\",\r\n    \"sku\": \"ACC-COL-NYL-L\",\r\n    \"barcode\": \"7750112000012\",\r\n    \"price\": 30.00,\r\n    \"cost\": 17.00,\r\n    \"attributes\": \"{\\\"talla\\\": \\\"L\\\"}\",\r\n    \"sortOrder\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "POST Crear variante Talla XL",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {\r",
+                      "    const r = pm.response.json();\r",
+                      "    if (r.data && r.data.id) {\r",
+                      "        pm.environment.set(\"variant_id\", r.data.id);\r",
+                      "        console.log(\"✅ variant_id guardado:\", r.data.id);\r",
+                      "    }\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Talla XL\",\r\n    \"sku\": \"ACC-COL-NYL-XL\",\r\n    \"barcode\": \"7750112000013\",\r\n    \"price\": 35.00,\r\n    \"cost\": 20.00,\r\n    \"attributes\": \"{\\\"talla\\\": \\\"XL\\\"}\",\r\n    \"sortOrder\": 4\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Listar variantes del collar",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants?page=0&size=20",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Variante por ID",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants/{{variant_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants",
+                    "{{variant_id}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Variante por SKU",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/variants/sku/ACC-COL-NYL-M",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "variants",
+                    "sku",
+                    "ACC-COL-NYL-M"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "GET Variante por Barcode",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/variants/barcode/7750112000011",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "variants",
+                    "barcode",
+                    "7750112000011"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ SKU inexistente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/variants/sku/SKU-NO-EXISTE",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "variants",
+                    "sku",
+                    "SKU-NO-EXISTE"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ SKU duplicado en variantes",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Talla duplicada\",\r\n    \"sku\": \"ACC-COL-NYL-M\",\r\n    \"price\": 25.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ SKU duplicado en productos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"Variante con SKU de producto\",\r\n    \"sku\": \"SRV-CONS-GEN\",\r\n    \"price\": 25.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "❌ Nombre vacío",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"name\": \"\",\r\n    \"sku\": \"TEST-003\",\r\n    \"price\": 25.00\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/products/85003d85-a5c8-46a1-bb16-95a773f84519/variants",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "products",
+                    "85003d85-a5c8-46a1-bb16-95a773f84519",
+                    "variants"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GET /api/products - Sin Token (debe dar 401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/products - Con Token (gateway pasa, 503 esperado)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwt_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/api/products",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Inventory Service",
+      "item": [
+        {
+          "name": "GRUPO A — Consultas de stock inicial (todo vacío)",
+          "item": [
+            {
+              "name": "Prueba 63 — GET stock de la sucursal vacío",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock?branchId={{branch_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 64 — GET stock bajo mínimo vacío",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/low?branchId={{branch_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "low"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 65 — GET stock de un producto sin registro",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/product/b99c42fa-4c8a-47ab-bee6-a3ff41f30fee",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "product",
+                    "b99c42fa-4c8a-47ab-bee6-a3ff41f30fee"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "New Request",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO B — Ajustes de stock",
+          "item": [
+            {
+              "name": "Prueba 66 — ✅ Primer ingreso de stock (Royal Canin)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"reason\":    \"PURCHASE\",\r\n    \"quantity\":  10,\r\n    \"notes\":     \"Compra inicial Royal Canin 15kg\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 68 — ✅ Ingreso de segundo producto (Amoxicilina)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b272f65c-f952-4d68-8664-f8749e5159aa\",\r\n    \"reason\":    \"PURCHASE\",\r\n    \"quantity\":  20,\r\n    \"notes\":     \"Compra inicial Amoxicilina 500mg\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 67 — ✅ Segundo ingreso acumulativo (Royal Canin) Copy",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"reason\":    \"PURCHASE\",\r\n    \"quantity\":  5,\r\n    \"notes\":     \"Reposicion Royal Canin 15kg\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 69 — ✅ Ingreso de tercer producto (Whiskas)",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"c078f9fa-9f5f-4319-8197-2fb469df65af\",\r\n    \"reason\":    \"PURCHASE\",\r\n    \"quantity\":  30,\r\n    \"notes\":     \"Compra inicial Whiskas Atun 400g\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO C — Ajustes negativos y validaciones",
+          "item": [
+            {
+              "name": "Prueba 70 — ✅ Ajuste negativo por merma",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b272f65c-f952-4d68-8664-f8749e5159aa\",\r\n    \"reason\":    \"ADJUSTMENT_OUT\",\r\n    \"quantity\":  3,\r\n    \"notes\":     \"Merma por vencimiento Amoxicilina lote 2024\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 71 — ❌ Stock insuficiente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"reason\":    \"ADJUSTMENT_OUT\",\r\n    \"quantity\":  20,\r\n    \"notes\":     \"Ajuste de prueba que debe fallar\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 72 — ❌ Sin notes en ajuste manual",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"reason\":    \"ADJUSTMENT_IN\",\r\n    \"quantity\":  5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 73 — ❌ Sin productId ni variantId",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"reason\":   \"PURCHASE\",\r\n    \"quantity\": 5,\r\n    \"notes\":    \"Sin producto identificado\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO D — Consultas con datos",
+          "item": [
+            {
+              "name": "Prueba 74 — GET stock de la sucursal con datos",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock?branchId={{branch_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 75 — GET stock de un producto específico",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/product/b99c42fa-4c8a-47ab-bee6-a3ff41f30fee",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "product",
+                    "b99c42fa-4c8a-47ab-bee6-a3ff41f30fee"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 76 — GET historial de movimientos de la sucursal",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements?branchId={{branch_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 77 — GET historial de movimientos de un producto",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements/product/b99c42fa-4c8a-47ab-bee6-a3ff41f30fee",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements",
+                    "product",
+                    "b99c42fa-4c8a-47ab-bee6-a3ff41f30fee"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO E — Transferencia entre sucursales",
+          "item": [
+            {
+              "name": "Prueba 78 — ✅ Transferencia entre sucursales",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fromBranchId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"toBranchId\":   \"a2b3c4d5-e6f7-8901-bcde-f12345678901\",\r\n    \"productId\":    \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"quantity\":     5,\r\n    \"notes\":        \"Reposicion mensual Sucursal Norte\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/transfers",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "transfers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 79 — Verificar stock en Sede Principal después de transferencia",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/product/b99c42fa-4c8a-47ab-bee6-a3ff41f30fee",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "product",
+                    "b99c42fa-4c8a-47ab-bee6-a3ff41f30fee"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 80 — ❌ Transferencia a la misma sucursal",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fromBranchId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"toBranchId\":   \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\":    \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"quantity\":     5,\r\n    \"notes\":        \"Transferencia invalida\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/transfers",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "transfers"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 81 — ❌ Transferencia con stock insuficiente",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"fromBranchId\": \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"toBranchId\":   \"a2b3c4d5-e6f7-8901-bcde-f12345678901\",\r\n    \"productId\":    \"b99c42fa-4c8a-47ab-bee6-a3ff41f30fee\",\r\n    \"quantity\":     20,\r\n    \"notes\":        \"Transferencia con stock insuficiente\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/transfers",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "transfers"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO F — Stock bajo mínimo",
+          "item": [
+            {
+              "name": "Prueba 82 — Configurar mínimo y verificar alerta",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b272f65c-f952-4d68-8664-f8749e5159aa\",\r\n    \"reason\":    \"ADJUSTMENT_OUT\",\r\n    \"quantity\":  15,\r\n    \"notes\":     \"Ajuste conteo fisico mensual\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/adjustments",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "adjustments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO G — GET por ID y configuración de mínimos",
+          "item": [
+            {
+              "name": "Prueba 83 — GET stock por ID directo",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"branchId\":  \"f47ac10b-58cc-4372-a567-0e02b2c3d479\",\r\n    \"productId\": \"b272f65c-f952-4d68-8664-f8749e5159aa\",\r\n    \"reason\":    \"ADJUSTMENT_OUT\",\r\n    \"quantity\":  15,\r\n    \"notes\":     \"Ajuste conteo fisico mensual\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/{{stock_id_royal_canin}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "{{stock_id_royal_canin}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 84 — PUT configurar mínimo y máximo",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"minQuantity\": 5,\r\n    \"maxQuantity\": 50\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/{{stock_id_royal_canin}}/config",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "{{stock_id_royal_canin}}",
+                    "config"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 85 — PUT solo minQuantity — patch behavior",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"minQuantity\": 12\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/{{stock_id_royal_canin}}/config",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "{{stock_id_royal_canin}}",
+                    "config"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 86 — ❌ maxQuantity menor que minQuantity",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"minQuantity\": 20,\r\n    \"maxQuantity\": 5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/{{stock_id_royal_canin}}/config",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "{{stock_id_royal_canin}}",
+                    "config"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 87 — GET /low con Royal Canin bajo mínimo",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"minQuantity\": 20,\r\n    \"maxQuantity\": 5\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/low?branchId={{branch_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "low"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "GRUPO H — Filtros en historial",
+          "item": [
+            {
+              "name": "Prueba 88 — GET historial filtrado por type=IN",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements?branchId={{branch_id}}&type=IN",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    },
+                    {
+                      "key": "type",
+                      "value": "IN"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 89 — GET historial filtrado por type=OUT",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"minQuantity\": 5,\r\n    \"maxQuantity\": 50\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements?branchId={{branch_id}}&type=OUT",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    },
+                    {
+                      "key": "type",
+                      "value": "OUT"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 90 — GET historial filtrado por reason=PURCHASE",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements?branchId={{branch_id}}&reason=PURCHASE",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    },
+                    {
+                      "key": "reason",
+                      "value": "PURCHASE"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 91 — GET historial filtrado por reason=ADJUSTMENT_OUT",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements?branchId={{branch_id}}&reason=ADJUSTMENT_OUT",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements"
+                  ],
+                  "query": [
+                    {
+                      "key": "branchId",
+                      "value": "{{branch_id}}"
+                    },
+                    {
+                      "key": "reason",
+                      "value": "ADJUSTMENT_OUT"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Prueba 92 — GET historial variante con lista vacía",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{jwt_token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}:{{gateway_port}}/api/stock/movements/variant/00000000-0000-0000-0000-000000000001",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "port": "{{gateway_port}}",
+                  "path": [
+                    "api",
+                    "stock",
+                    "movements",
+                    "variant",
+                    "00000000-0000-0000-0000-000000000001"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sales Service",
+      "item": []
+    },
+    {
+      "name": "Finance Service",
+      "item": []
+    },
+    {
+      "name": "AI Service",
+      "item": []
+    },
+    {
+      "name": "gateway-service",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}:{{gateway_port}}/actuator/gateway/routes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "port": "{{gateway_port}}",
+              "path": [
+                "actuator",
+                "gateway",
+                "routes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
