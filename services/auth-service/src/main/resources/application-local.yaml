@@ -23,8 +23,12 @@ spring:
         format_sql: true
 
   # ─── FLYWAY ───────────────────────────────────────────────────────
+  # false → auth-service NO ejecuta migraciones.
+  # auth-service lee la tabla users del schema de cada TENANT
+  # (vía TenantContext), no tiene tablas propias en public.
+  # tenant-service es el único dueño de las migraciones.
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
 
