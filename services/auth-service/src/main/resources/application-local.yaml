@@ -29,8 +29,6 @@ spring:
   # tenant-service es el único dueño de las migraciones.
   flyway:
     enabled: false
-    locations: classpath:db/migration
-    baseline-on-migrate: true
 
 # ─── JWT ──────────────────────────────────────────────────────────────
 # secret → clave secreta para firmar los tokens
